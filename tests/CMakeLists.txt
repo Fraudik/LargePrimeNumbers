@@ -6,4 +6,7 @@ macro(add_test test_name)
     target_include_directories(${test_name} PRIVATE "${PROJECT_SOURCE_DIR}/src")
 endmacro()
 
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/primes_5_to_99991.txt
+        ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
+
 add_test(probable_primes_test)

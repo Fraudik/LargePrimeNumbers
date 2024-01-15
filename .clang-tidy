@@ -152,8 +152,8 @@ Checks: '*,
 WarningsAsErrors: '*'
 
 ExtraArgs:
-- '-Wno-unknown-pragmas'
-- '-Wno-unused-command-line-argument' # similar issue
+  - '-Wno-unknown-pragmas'
+  - '-Wno-unused-command-line-argument' # similar issue
 
 CheckOptions:
   readability-identifier-naming.ClassCase: CamelCase
