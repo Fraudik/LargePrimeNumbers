@@ -1,6 +1,5 @@
 #pragma once
 
-#include <optional>
 #include <gmpxx.h>
 
 #include "probable_primes.h"

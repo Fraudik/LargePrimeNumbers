@@ -17,13 +17,13 @@ struct LucasTestParameters
     PrimalityStatus pre_test_status;
 };
 
-PrimalityStatus FermatProbablePrimeTestWithCheck(mpz_t a, mpz_t p);
-PrimalityStatus EulerJacobiProbablePrimeTestWithCheck(mpz_t a, mpz_t p);
-PrimalityStatus MillerRabinProbablePrimeTest(mpz_t a, mpz_t p);
+PrimalityStatus FermatProbablePrimeTestWithCheck(mpz_t number, mpz_t base);
+PrimalityStatus EulerJacobiProbablePrimeTestWithCheck(mpz_t number, mpz_t base);
+PrimalityStatus MillerRabinProbablePrimeTest(mpz_t number, mpz_t base);
 
-PrimalityStatus LucasProbablePrimeTestWithCheck(mpz_t n, int64_t p, int64_t q);
-PrimalityStatus StrongLucasProbablePrimeTestWithCheck(mpz_t n, int64_t p, int64_t q);
-LucasTestParameters CalculateSelfridgeParametersForLucasTest(mpz_t n, int64_t max_d);
-PrimalityStatus BPSWPrimalityTest(mpz_t n);
+PrimalityStatus LucasProbablePrimeTestWithCheck(mpz_t number, int64_t p, int64_t q);
+PrimalityStatus StrongLucasProbablePrimeTestWithCheck(mpz_t number, int64_t p, int64_t q);
+LucasTestParameters CalculateSelfridgeParametersForLucasTest(mpz_t number, int64_t max_d);
+PrimalityStatus BPSWPrimalityTest(mpz_t number);
 
 }

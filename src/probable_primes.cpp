@@ -15,17 +15,17 @@ bool are_coprime(mpz_t a, mpz_t b) {
     return true;
 }
 
-// Check if n is Fermat pseudoprime to base a
-PrimalityStatus FermatProbablePrimeTest(mpz_t n, mpz_t a)
+// Check if number is Fermat pseudoprime to chosen base
+PrimalityStatus FermatProbablePrimeTest(mpz_t number, mpz_t base)
 {
     mpz_t formula_result;
     mpz_t exponent;
     mpz_init(formula_result);
-    mpz_init_set(exponent, n);
+    mpz_init_set(exponent, number);
     mpz_sub_ui(exponent, exponent, 1);
-    mpz_powm(formula_result, a, exponent, n);
+    mpz_powm(formula_result, base, exponent, number);
 
-    // Check if  $a^(n - 1) = 1 mod p$
+    // Check if $a^(p - 1) = 1 mod p$ where $p$ is $number$ and $a$ is $base$
     if (mpz_cmp_ui(formula_result, 1) == 0)
     {
         mpz_clear(formula_result);
@@ -40,34 +40,34 @@ PrimalityStatus FermatProbablePrimeTest(mpz_t n, mpz_t a)
     }
 }
 
-PrimalityStatus FermatProbablePrimeTestWithCheck(mpz_t n, mpz_t a)
+PrimalityStatus FermatProbablePrimeTestWithCheck(mpz_t number, mpz_t base)
 {
-    assert(are_coprime(n, a));
-    return FermatProbablePrimeTest(n, a);
+    assert(are_coprime(number, base));
+    return FermatProbablePrimeTest(number, base);
 }
 
-// Check if n is Euler-Jacobi pseudoprime to base a
-PrimalityStatus EulerJacobiProbablePrimeTest(mpz_t n, mpz_t a)
+// Check if number is Euler-Jacobi pseudoprime to chosen base
+PrimalityStatus EulerJacobiProbablePrimeTest(mpz_t number, mpz_t base)
 {
     mpz_t left_formula_result;
     mpz_t exponent;
     mpz_init(left_formula_result);
-    mpz_init_set(exponent, n);
+    mpz_init_set(exponent, number);
     mpz_sub_ui(exponent, exponent, 1);
     mpz_divexact_ui(exponent, exponent, 2);
-    mpz_powm(left_formula_result, a, exponent, n);
+    mpz_powm(left_formula_result, base, exponent, number);
 
     mpz_t right_formula_result;
     int jacobi_symbol;
-    mpz_init_set(right_formula_result, n);
-    jacobi_symbol = mpz_jacobi(a, n);
+    mpz_init_set(right_formula_result, number);
+    jacobi_symbol = mpz_jacobi(base, number);
     if (jacobi_symbol == -1)
         mpz_sub_ui(right_formula_result, right_formula_result, 1);
     else if (jacobi_symbol == 1)
         mpz_add_ui(right_formula_result, right_formula_result, 1);
-    mpz_mod(right_formula_result, right_formula_result, n);
+    mpz_mod(right_formula_result, right_formula_result, number);
 
-    // Check if $a^((n - 1) / 2) = JacobiSymbol(a, n) mod n$
+    // Check if $a^((p - 1) / 2) = JacobiSymbol(a, p) mod p$ where $p$ is $number$ and $a$ is $base$
     if (mpz_cmp(left_formula_result, right_formula_result) == 0)
     {
         mpz_clear(left_formula_result);
@@ -82,88 +82,88 @@ PrimalityStatus EulerJacobiProbablePrimeTest(mpz_t n, mpz_t a)
     }
 }
 
-PrimalityStatus EulerJacobiProbablePrimeTestWithCheck(mpz_t n, mpz_t a)
+PrimalityStatus EulerJacobiProbablePrimeTestWithCheck(mpz_t number, mpz_t base)
 {
-    assert(are_coprime(n, a));
-    return EulerJacobiProbablePrimeTest(n, a);
+    assert(are_coprime(number, base));
+    return EulerJacobiProbablePrimeTest(number, base);
 }
 
 // Check if n is Miller-Rabin strong probable prime to base a
-PrimalityStatus MillerRabinProbablePrimeTest(mpz_t n, mpz_t a)
+PrimalityStatus MillerRabinProbablePrimeTest(mpz_t number, mpz_t base)
 {
-    mpz_t n_minus_one;
-    // Choose s and r satisfying equality $n = (2^r)*s + 1$ with odd s
-    mpz_init_set(n_minus_one, n);
-    mpz_sub_ui(n_minus_one, n_minus_one, 1);
-    uint64_t r = mpz_scan1(n_minus_one, 0);
+    mpz_t number_minus_one;
+    // Choose s and r satisfying equality $n = (2^r)*s + 1$ with odd s where $n$ is $number$ and $a$ is $base$
+    mpz_init_set(number_minus_one, number);
+    mpz_sub_ui(number_minus_one, number_minus_one, 1);
+    uint64_t r = mpz_scan1(number_minus_one, 0);
 
     mpz_t s;
     // $s = floor((n - 1) / 2^r)$
     mpz_init_set_ui(s, 0);
-    mpz_fdiv_q_2exp(s, n_minus_one, r);
+    mpz_fdiv_q_2exp(s, number_minus_one, r);
 
     mpz_t formula_result;
-    // Check if $a^s mod n = 1$ or $a^s mod n = -1 (n - 1)$
+    // Check if $a^s mod n = 1$ or $a^s mod n = -1 (n - 1)$ where $n$ is $number$ and $a$ is $base$
     mpz_init_set_ui(formula_result, 0);
-    mpz_powm(formula_result, a, s, n);
-    if ((mpz_cmp_ui(formula_result, 1) == 0) || (mpz_cmp(formula_result, n_minus_one) == 0))
+    mpz_powm(formula_result, base, s, number);
+    if ((mpz_cmp_ui(formula_result, 1) == 0) || (mpz_cmp(formula_result, number_minus_one) == 0))
     {
         mpz_clear(s);
-        mpz_clear(n_minus_one);
+        mpz_clear(number_minus_one);
         mpz_clear(formula_result);
         return PrimalityStatus::ProbablePrime;
     }
 
-    // Check if $a^(2^t * s) mod n = -1 (n - 1)$ for every integer t in (0; r)
+    // Check if $a^(2^t * s) mod n = -1 (n - 1)$ for every integer t in (0; r) where $n$ is $number$ and $a$ is $base$
     while (--r)
     {
         mpz_mul(formula_result, formula_result, formula_result);
-        mpz_mod(formula_result, formula_result, n);
+        mpz_mod(formula_result, formula_result, number);
 
-        if (mpz_cmp(formula_result, n_minus_one) == 0)
+        if (mpz_cmp(formula_result, number_minus_one) == 0)
         {
             mpz_clear(s);
-            mpz_clear(n_minus_one);
+            mpz_clear(number_minus_one);
             mpz_clear(formula_result);
             return PrimalityStatus::ProbablePrime;
         }
     }
 
     mpz_clear(s);
-    mpz_clear(n_minus_one);
+    mpz_clear(number_minus_one);
     mpz_clear(formula_result);
     return PrimalityStatus::Composite;
 }
 
 // Let D, P and Q be such that D = P^2 - 4Q != 0 and P > 0
 // Also $gcd(n, Q) = 1$
-void LucasPreconditionsCheck(mpz_t n, int64_t p, int64_t q)
+void LucasPreconditionsCheck(mpz_t number, int64_t p, int64_t q)
 {
     assert(p > 0);
     mpz_t gmp_q;
     mpz_init_set_si(gmp_q, q);
-    assert(are_coprime(n, gmp_q));
+    assert(are_coprime(number, gmp_q));
     assert((p * p - 4 * q) != 0);
 }
 
-PrimalityStatus LucasProbablePrimeTest(mpz_t n, int64_t p, int64_t q)
+PrimalityStatus LucasProbablePrimeTest(mpz_t number, int64_t p, int64_t q)
 {
     int64_t d = p * p - 4 * q;
     mpz_t gmp_d;
     mpz_init_set_si(gmp_d, d);
 
-    // Also some congurences are hold provided $gcd(n, D) = 1$
+    // Also some congurences are hold provided $gcd(number, D) = 1$
     // Consider this part of the test because D is not chosen based on the number tested
-    if (!are_coprime(n, gmp_d))
+    if (!are_coprime(number, gmp_d))
     {
         mpz_clear(gmp_d);
         return PrimalityStatus::Composite;
     }
 
     mpz_t delta_n;
-    // delta_n = n - JacobiSymbol(D/n)
-    mpz_init_set(delta_n, n);
-    int ret = mpz_jacobi(gmp_d, n);
+    // $delta_n = n - JacobiSymbol(D/n)$
+    mpz_init_set(delta_n, number);
+    int ret = mpz_jacobi(gmp_d, number);
     if (ret == -1)
         mpz_add_ui(delta_n, delta_n, 1);
     else if (ret == 1)
@@ -184,7 +184,7 @@ PrimalityStatus LucasProbablePrimeTest(mpz_t n, int64_t p, int64_t q)
     {
         // q_l = q_l*q_h (mod n)
         mpz_mul(q_l, q_l, q_h);
-        mpz_mod(q_l, q_l, n);
+        mpz_mod(q_l, q_l, number);
         if (mpz_tstbit(delta_n, j) == 1)
         {
             // q_h = q_l * q
@@ -192,19 +192,19 @@ PrimalityStatus LucasProbablePrimeTest(mpz_t n, int64_t p, int64_t q)
 
             // u_h = u_h * v_h (mod n)
             mpz_mul(u_h, u_h, v_h);
-            mpz_mod(u_h, u_h, n);
+            mpz_mod(u_h, u_h, number);
 
             // v_l = v_h * v_l - p * q_l (mod n)
             mpz_mul(v_l, v_h, v_l);
             mpz_mul_si(temp, q_l, p);
             mpz_sub(v_l, v_l, temp);
-            mpz_mod(v_l, v_l, n);
+            mpz_mod(v_l, v_l, number);
 
             // v_h = v_h * v_h - 2 * q_h (mod n)
             mpz_mul(v_h, v_h, v_h);
             mpz_mul_si(temp, q_h, 2);
             mpz_sub(v_h, v_h, temp);
-            mpz_mod(v_h, v_h, n);
+            mpz_mod(v_h, v_h, number);
         }
         else
         {
@@ -214,19 +214,19 @@ PrimalityStatus LucasProbablePrimeTest(mpz_t n, int64_t p, int64_t q)
             // u_h = u_h * v_l - q_l (mod n)
             mpz_mul(u_h, u_h, v_l);
             mpz_sub(u_h, u_h, q_l);
-            mpz_mod(u_h, u_h, n);
+            mpz_mod(u_h, u_h, number);
 
             // v_h = v_h * v_l - p * q_l (mod n)
             mpz_mul(v_h, v_h, v_l);
             mpz_mul_si(temp, q_l, p);
             mpz_sub(v_h, v_h, temp);
-            mpz_mod(v_h, v_h, n);
+            mpz_mod(v_h, v_h, number);
 
             // v_l = v_l * v_l - 2 * q_l (mod n)
             mpz_mul(v_l, v_l, v_l);
             mpz_mul_si(temp, q_l, 2);
             mpz_sub(v_l, v_l, temp);
-            mpz_mod(v_l, v_l, n);
+            mpz_mod(v_l, v_l, number);
         }
     }
     // q_l = q_l * q_h
@@ -251,20 +251,20 @@ PrimalityStatus LucasProbablePrimeTest(mpz_t n, int64_t p, int64_t q)
     {
         // u_h = u_h * v_l (mod n)
         mpz_mul(u_h, u_h, v_l);
-        mpz_mod(u_h, u_h, n);
+        mpz_mod(u_h, u_h, number);
 
         // v_l = v_l * v_l - 2 * q_l (mod n)
         mpz_mul(v_l, v_l, v_l);
         mpz_mul_si(temp, q_l, 2);
         mpz_sub(v_l, v_l, temp);
-        mpz_mod(v_l, v_l, n);
+        mpz_mod(v_l, v_l, number);
 
         // q_l = q_l * q_l (mod n)
         mpz_mul(q_l, q_l, q_l);
-        mpz_mod(q_l, q_l, n);
+        mpz_mod(q_l, q_l, number);
     }
 
-    mpz_mod(u_h, u_h, n);
+    mpz_mod(u_h, u_h, number);
 
     mpz_clear(gmp_d);
     mpz_clear(delta_n);
@@ -286,21 +286,21 @@ PrimalityStatus LucasProbablePrimeTest(mpz_t n, int64_t p, int64_t q)
     }
 }
 
-PrimalityStatus LucasProbablePrimeTestWithCheck(mpz_t n, int64_t p, int64_t q)
+PrimalityStatus LucasProbablePrimeTestWithCheck(mpz_t number, int64_t p, int64_t q)
 {
-    LucasPreconditionsCheck(n, p, q);
-    return LucasProbablePrimeTest(n, p, q);
+    LucasPreconditionsCheck(number, p, q);
+    return LucasProbablePrimeTest(number, p, q);
 }
 
-PrimalityStatus StrongLucasProbablePrimeTest(mpz_t n, int64_t p, int64_t q)
+PrimalityStatus StrongLucasProbablePrimeTest(mpz_t number, int64_t p, int64_t q)
 {
     int64_t d = p * p - 4 * q;
     mpz_t gmp_d;
     mpz_init_set_si(gmp_d, d);
 
-    // Also some congurences are hold provided $gcd(n, D) = 1$
+    // Also some congurences are hold provided $gcd(number, D) = 1$
     // Consider this part of the test because D is not chosen based on the number tested
-    if (!are_coprime(n, gmp_d))
+    if (!are_coprime(number, gmp_d))
     {
         mpz_clear(gmp_d);
         return PrimalityStatus::Composite;
@@ -308,8 +308,8 @@ PrimalityStatus StrongLucasProbablePrimeTest(mpz_t n, int64_t p, int64_t q)
 
     mpz_t delta_n;
     // delta_n = n - JacobiSymbol(D/n)
-    mpz_init_set(delta_n, n);
-    int ret = mpz_jacobi(gmp_d, n);
+    mpz_init_set(delta_n, number);
+    int ret = mpz_jacobi(gmp_d, number);
     if (ret == -1)
         mpz_add_ui(delta_n, delta_n, 1);
     else if (ret == 1)
@@ -335,7 +335,7 @@ PrimalityStatus StrongLucasProbablePrimeTest(mpz_t n, int64_t p, int64_t q)
     {
         // q_l = q_l * q_h (mod n)
         mpz_mul(q_l, q_l, q_h);
-        mpz_mod(q_l, q_l, n);
+        mpz_mod(q_l, q_l, number);
         if (mpz_tstbit(t, j) == 1)
         {
             // q_h = q_l * q
@@ -343,19 +343,19 @@ PrimalityStatus StrongLucasProbablePrimeTest(mpz_t n, int64_t p, int64_t q)
 
             // u_h = u_h * v_h (mod n)
             mpz_mul(u_h, u_h, v_h);
-            mpz_mod(u_h, u_h, n);
+            mpz_mod(u_h, u_h, number);
 
             // v_l = v_h * v_l - p * q_l (mod n)
             mpz_mul(v_l, v_h, v_l);
             mpz_mul_si(temp, q_l, p);
             mpz_sub(v_l, v_l, temp);
-            mpz_mod(v_l, v_l, n);
+            mpz_mod(v_l, v_l, number);
 
             // v_h = v_h * v_h - 2 * q_h (mod n)
             mpz_mul(v_h, v_h, v_h);
             mpz_mul_si(temp, q_h, 2);
             mpz_sub(v_h, v_h, temp);
-            mpz_mod(v_h, v_h, n);
+            mpz_mod(v_h, v_h, number);
         }
         else
         {
@@ -365,19 +365,19 @@ PrimalityStatus StrongLucasProbablePrimeTest(mpz_t n, int64_t p, int64_t q)
             // u_h = u_h * v_l - q_l (mod n)
             mpz_mul(u_h, u_h, v_l);
             mpz_sub(u_h, u_h, q_l);
-            mpz_mod(u_h, u_h, n);
+            mpz_mod(u_h, u_h, number);
 
             // v_h = v_h * v_l - p * q_l (mod n)
             mpz_mul(v_h, v_h, v_l);
             mpz_mul_si(temp, q_l, p);
             mpz_sub(v_h, v_h, temp);
-            mpz_mod(v_h, v_h, n);
+            mpz_mod(v_h, v_h, number);
 
             // v_l = v_l * v_l - 2 * q_l (mod n)
             mpz_mul(v_l, v_l, v_l);
             mpz_mul_si(temp, q_l, 2);
             mpz_sub(v_l, v_l, temp);
-            mpz_mod(v_l, v_l, n);
+            mpz_mod(v_l, v_l, number);
         }
     }
 
@@ -399,8 +399,8 @@ PrimalityStatus StrongLucasProbablePrimeTest(mpz_t n, int64_t p, int64_t q)
     // q_l = q_l * q_h
     mpz_mul(q_l, q_l, q_h);
 
-    mpz_mod(u_h, u_h, n);
-    mpz_mod(v_l, v_l, n);
+    mpz_mod(u_h, u_h, number);
+    mpz_mod(v_l, v_l, number);
 
     // u_h = U_t and v_l = V_t of Lucas sequences
     // Checking if U_t = 0 (mod n)$ or $V_(t * 2^0) = 0 (mod n)$
@@ -425,11 +425,11 @@ PrimalityStatus StrongLucasProbablePrimeTest(mpz_t n, int64_t p, int64_t q)
         mpz_mul(v_l, v_l, v_l);
         mpz_mul_si(temp, q_l, 2);
         mpz_sub(v_l, v_l, temp);
-        mpz_mod(v_l, v_l, n);
+        mpz_mod(v_l, v_l, number);
 
         // q_l = q_l * q_l (mod n)
         mpz_mul(q_l, q_l, q_l);
-        mpz_mod(q_l, q_l, n);
+        mpz_mod(q_l, q_l, number);
 
         if (mpz_cmp_ui(v_l, 0) == 0)
         {
@@ -458,16 +458,16 @@ PrimalityStatus StrongLucasProbablePrimeTest(mpz_t n, int64_t p, int64_t q)
     return PrimalityStatus::Composite;
 }
 
-PrimalityStatus StrongLucasProbablePrimeTestWithCheck(mpz_t n, int64_t p, int64_t q)
+PrimalityStatus StrongLucasProbablePrimeTestWithCheck(mpz_t number, int64_t p, int64_t q)
 {
-    LucasPreconditionsCheck(n, p, q);
-    return StrongLucasProbablePrimeTest(n, p, q);
+    LucasPreconditionsCheck(number, p, q);
+    return StrongLucasProbablePrimeTest(number, p, q);
 }
 
-// If N is a perfect square, no required D will exist
-LucasTestParameters CalculateSelfridgeParametersForLucasTest(mpz_t n, int64_t max_d = 100'000)
+// If number is a perfect square, no required D will exist
+LucasTestParameters CalculateSelfridgeParametersForLucasTest(mpz_t number, int64_t max_d = 100'000)
 {
-    assert(!mpz_perfect_square_p(n));
+    assert(!mpz_perfect_square_p(number));
 
     int64_t d = 5, p = 1, q;
     mpz_t gmp_d;
@@ -476,12 +476,12 @@ LucasTestParameters CalculateSelfridgeParametersForLucasTest(mpz_t n, int64_t ma
     int jacobi_symbol;
     while (true)
     {
-        jacobi_symbol = mpz_jacobi(gmp_d, n);
+        jacobi_symbol = mpz_jacobi(gmp_d, number);
 
-        // If jacobi_symbol is 0, then D is a factor of N
+        // If jacobi_symbol is 0, then D is a factor of number
         if (jacobi_symbol == 0)
         {
-            if (mpz_cmpabs(gmp_d, n) == 0)
+            if (mpz_cmpabs(gmp_d, number) == 0)
             {
                 mpz_clear(gmp_d);
                 return LucasTestParameters{p, q, PrimalityStatus::Prime};
@@ -524,21 +524,21 @@ LucasTestParameters CalculateSelfridgeParametersForLucasTest(mpz_t n, int64_t ma
     return LucasTestParameters{p, q, PrimalityStatus::ProbablePrime};
 }
 
-PrimalityStatus BPSWPrimalityTest(mpz_t n)
+PrimalityStatus BPSWPrimalityTest(mpz_t number)
 {
     mpz_t two;
     mpz_init_set_ui(two, 2);
-    auto mr_test_result = MillerRabinProbablePrimeTest(n, two);
+    auto mr_test_result = MillerRabinProbablePrimeTest(number, two);
     mpz_clear(two);
 
     if (mr_test_result != PrimalityStatus::ProbablePrime)
         return mr_test_result;
 
-    auto selfridge_parameters = CalculateSelfridgeParametersForLucasTest(n);
+    auto selfridge_parameters = CalculateSelfridgeParametersForLucasTest(number);
     if (selfridge_parameters.pre_test_status != PrimalityStatus::ProbablePrime)
         return selfridge_parameters.pre_test_status;
 
-    return StrongLucasProbablePrimeTestWithCheck(n, selfridge_parameters.p, selfridge_parameters.q);
+    return StrongLucasProbablePrimeTestWithCheck(number, selfridge_parameters.p, selfridge_parameters.q);
 }
 
 }
