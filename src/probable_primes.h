@@ -8,6 +8,14 @@
 namespace large_prime_numbers
 {
 
+typedef std::mt19937 rng_type;
+
+const int64_t kSelfridgeDefaultMaxD = 100'000;
+
+PrimalityStatus FermatProbablePrimeTestWithCheck(mpz_t number, mpz_t base);
+PrimalityStatus EulerJacobiProbablePrimeTestWithCheck(mpz_t number, mpz_t base);
+PrimalityStatus MillerRabinProbablePrimeTest(mpz_t number, mpz_t base);
+
 struct LucasTestParameters
 {
     int64_t p;
@@ -17,13 +25,13 @@ struct LucasTestParameters
     PrimalityStatus pre_test_status;
 };
 
-PrimalityStatus FermatProbablePrimeTestWithCheck(mpz_t number, mpz_t base);
-PrimalityStatus EulerJacobiProbablePrimeTestWithCheck(mpz_t number, mpz_t base);
-PrimalityStatus MillerRabinProbablePrimeTest(mpz_t number, mpz_t base);
-
 PrimalityStatus LucasProbablePrimeTestWithCheck(mpz_t number, int64_t p, int64_t q);
 PrimalityStatus StrongLucasProbablePrimeTestWithCheck(mpz_t number, int64_t p, int64_t q);
+
 LucasTestParameters CalculateSelfridgeParametersForLucasTest(mpz_t number, int64_t max_d);
+PrimalityStatus LucasProbablePrimeTestWithSelfridgeParameters(mpz_t number, int64_t max_d);
+PrimalityStatus StrongLucasProbablePrimeTestWithSelfridgeParameters(mpz_t number, int64_t max_d);
+
 PrimalityStatus BPSWPrimalityTest(mpz_t number);
 
 }

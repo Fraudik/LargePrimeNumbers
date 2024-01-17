@@ -7,17 +7,25 @@
 namespace large_prime_numbers
 {
 
-template <class PrimalityTest, class... TestSpecificArgs>
-bool PrimalityTestWrapper(mpz_t n, PrimalityTest primality_test, TestSpecificArgs&&... args)
+PrimalityStatus BasicPrimalityChecks(mpz_t number)
 {
-    if (mpz_cmp_ui(n, 2) < 0)
-        return false;
-    if (mpz_cmp_ui(n, 2) == 0)
-        return true;
-    if (mpz_divisible_ui_p(n, 2))
-        return false;
+    if (mpz_cmp_ui(number, 2) < 0)
+        return PrimalityStatus::Composite;
+    if (mpz_cmp_ui(number, 2) == 0)
+        return PrimalityStatus::Prime;
+    if (mpz_divisible_ui_p(number, 2))
+        return PrimalityStatus::Composite;
+    if (mpz_perfect_square_p(number))
+        return PrimalityStatus::Composite;
+    return PrimalityStatus::ProbablePrime;
+}
 
-    auto test_result = primality_test(n, std::forward<TestSpecificArgs>(args)...);
+template <class PrimalityTest, class... TestSpecificArgs>
+bool PrimalityTestWrapper(mpz_t number, PrimalityTest primality_test, TestSpecificArgs &&... args)
+{
+    PrimalityStatus test_result = BasicPrimalityChecks(number);
+    if (test_result == PrimalityStatus::ProbablePrime)
+        test_result = primality_test(number, std::forward<TestSpecificArgs>(args)...);
     if (test_result == PrimalityStatus::Composite)
         return false;
     return true;

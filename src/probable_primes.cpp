@@ -46,6 +46,11 @@ PrimalityStatus FermatProbablePrimeTestWithCheck(mpz_t number, mpz_t base)
     return FermatProbablePrimeTest(number, base);
 }
 
+//PrimalityStatus FermatProbablePrimeTestWithGeneratedBase(mpz_t number)
+//{
+//
+//}
+
 // Check if number is Euler-Jacobi pseudoprime to chosen base
 PrimalityStatus EulerJacobiProbablePrimeTest(mpz_t number, mpz_t base)
 {
@@ -136,14 +141,20 @@ PrimalityStatus MillerRabinProbablePrimeTest(mpz_t number, mpz_t base)
 }
 
 // Let D, P and Q be such that D = P^2 - 4Q != 0 and P > 0
-// Also $gcd(n, Q) = 1$
-void LucasPreconditionsCheck(mpz_t number, int64_t p, int64_t q)
+// Also $gcd(n, Q) = 1$ and $gcd(n, D) = 1$
+bool LucasPreconditionsCheck(mpz_t number, int64_t p, int64_t q)
 {
     assert(p > 0);
-    mpz_t gmp_q;
-    mpz_init_set_si(gmp_q, q);
-    assert(are_coprime(number, gmp_q));
-    assert((p * p - 4 * q) != 0);
+
+    mpz_class gmp_q(q);
+    assert(are_coprime(number, gmp_q.get_mpz_t()));
+
+    mpz_class gmp_d = p * p - 4 * q;
+    assert(gmp_d != 0);
+    assert(are_coprime(number, gmp_d.get_mpz_t()));
+
+    // bool type for putting function into assert
+    return true;
 }
 
 PrimalityStatus LucasProbablePrimeTest(mpz_t number, int64_t p, int64_t q)
@@ -151,14 +162,6 @@ PrimalityStatus LucasProbablePrimeTest(mpz_t number, int64_t p, int64_t q)
     int64_t d = p * p - 4 * q;
     mpz_t gmp_d;
     mpz_init_set_si(gmp_d, d);
-
-    // Also some congurences are hold provided $gcd(number, D) = 1$
-    // Consider this part of the test because D is not chosen based on the number tested
-    if (!are_coprime(number, gmp_d))
-    {
-        mpz_clear(gmp_d);
-        return PrimalityStatus::Composite;
-    }
 
     mpz_t delta_n;
     // $delta_n = n - JacobiSymbol(D/n)$
@@ -176,7 +179,7 @@ PrimalityStatus LucasProbablePrimeTest(mpz_t number, int64_t p, int64_t q)
     mpz_init_set_si(v_h, p);
     mpz_init_set_si(q_l, 1);
     mpz_init_set_si(q_h, 1);
-    mpz_set_si(temp, 0);
+    mpz_init_set_si(temp, 0);
 
     int s = mpz_scan1(delta_n, 0);
     int j;
@@ -288,7 +291,7 @@ PrimalityStatus LucasProbablePrimeTest(mpz_t number, int64_t p, int64_t q)
 
 PrimalityStatus LucasProbablePrimeTestWithCheck(mpz_t number, int64_t p, int64_t q)
 {
-    LucasPreconditionsCheck(number, p, q);
+    assert(LucasPreconditionsCheck(number, p, q));
     return LucasProbablePrimeTest(number, p, q);
 }
 
@@ -297,14 +300,6 @@ PrimalityStatus StrongLucasProbablePrimeTest(mpz_t number, int64_t p, int64_t q)
     int64_t d = p * p - 4 * q;
     mpz_t gmp_d;
     mpz_init_set_si(gmp_d, d);
-
-    // Also some congurences are hold provided $gcd(number, D) = 1$
-    // Consider this part of the test because D is not chosen based on the number tested
-    if (!are_coprime(number, gmp_d))
-    {
-        mpz_clear(gmp_d);
-        return PrimalityStatus::Composite;
-    }
 
     mpz_t delta_n;
     // delta_n = n - JacobiSymbol(D/n)
@@ -328,7 +323,7 @@ PrimalityStatus StrongLucasProbablePrimeTest(mpz_t number, int64_t p, int64_t q)
     mpz_init_set_si(v_h, p);
     mpz_init_set_si(q_l, 1);
     mpz_init_set_si(q_h, 1);
-    mpz_set_si(temp, 0);
+    mpz_init_set_si(temp, 0);
 
     size_t j;
     for (j = mpz_sizeinbase(t, 2) - 1; j >= 1; --j)
@@ -460,12 +455,12 @@ PrimalityStatus StrongLucasProbablePrimeTest(mpz_t number, int64_t p, int64_t q)
 
 PrimalityStatus StrongLucasProbablePrimeTestWithCheck(mpz_t number, int64_t p, int64_t q)
 {
-    LucasPreconditionsCheck(number, p, q);
+    assert(LucasPreconditionsCheck(number, p, q));
     return StrongLucasProbablePrimeTest(number, p, q);
 }
 
 // If number is a perfect square, no required D will exist
-LucasTestParameters CalculateSelfridgeParametersForLucasTest(mpz_t number, int64_t max_d = 100'000)
+LucasTestParameters CalculateSelfridgeParametersForLucasTest(mpz_t number, int64_t max_d)
 {
     assert(!mpz_perfect_square_p(number));
 
@@ -524,6 +519,22 @@ LucasTestParameters CalculateSelfridgeParametersForLucasTest(mpz_t number, int64
     return LucasTestParameters{p, q, PrimalityStatus::ProbablePrime};
 }
 
+PrimalityStatus LucasProbablePrimeTestWithSelfridgeParameters(mpz_t number, int64_t max_d)
+{
+    auto selfridge_parameters = CalculateSelfridgeParametersForLucasTest(number, max_d);
+    if (selfridge_parameters.pre_test_status != PrimalityStatus::ProbablePrime)
+        return selfridge_parameters.pre_test_status;
+    return LucasProbablePrimeTestWithCheck(number, selfridge_parameters.p, selfridge_parameters.q);
+}
+
+PrimalityStatus StrongLucasProbablePrimeTestWithSelfridgeParameters(mpz_t number, int64_t max_d)
+{
+    auto selfridge_parameters = CalculateSelfridgeParametersForLucasTest(number, max_d);
+    if (selfridge_parameters.pre_test_status != PrimalityStatus::ProbablePrime)
+        return selfridge_parameters.pre_test_status;
+    return StrongLucasProbablePrimeTestWithCheck(number, selfridge_parameters.p, selfridge_parameters.q);
+}
+
 PrimalityStatus BPSWPrimalityTest(mpz_t number)
 {
     mpz_t two;
@@ -534,11 +545,7 @@ PrimalityStatus BPSWPrimalityTest(mpz_t number)
     if (mr_test_result != PrimalityStatus::ProbablePrime)
         return mr_test_result;
 
-    auto selfridge_parameters = CalculateSelfridgeParametersForLucasTest(number);
-    if (selfridge_parameters.pre_test_status != PrimalityStatus::ProbablePrime)
-        return selfridge_parameters.pre_test_status;
-
-    return StrongLucasProbablePrimeTestWithCheck(number, selfridge_parameters.p, selfridge_parameters.q);
+    return StrongLucasProbablePrimeTestWithSelfridgeParameters(number, kSelfridgeDefaultMaxD);
 }
 
 }
