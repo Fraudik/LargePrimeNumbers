@@ -8,8 +8,6 @@
 namespace large_prime_numbers
 {
 
-typedef std::mt19937 rng_type;
-
 const int64_t kSelfridgeDefaultMaxD = 100'000;
 
 PrimalityStatus FermatProbablePrimeTestWithCheck(mpz_t number, mpz_t base);

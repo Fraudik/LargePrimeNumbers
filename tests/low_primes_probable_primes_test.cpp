@@ -92,4 +92,12 @@ TEST_F(LowPrimesList, StrongLucasProbablePrimeTestWithSelfridgeParameters)
                         StrongLucasProbablePrimeTestWithSelfridgeParameters, kSelfridgeDefaultMaxD);
 }
 
+TEST_F(LowPrimesList, BPSWPrimalityTest)
+{
+    CheckOnListOfPrimes("BPSWPrimalityTest",
+                        low_primes_,
+                        BPSWPrimalityTest);
+}
+
+
 }
