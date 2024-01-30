@@ -1,3 +1,5 @@
+#pragma once
+
 namespace large_prime_numbers
 {
 

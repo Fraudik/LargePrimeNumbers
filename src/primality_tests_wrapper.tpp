@@ -7,21 +7,21 @@
 namespace large_prime_numbers
 {
 
-PrimalityStatus BasicPrimalityChecks(mpz_t number)
+inline PrimalityStatus BasicPrimalityChecks(const mpz_class& number)
 {
-    if (mpz_cmp_ui(number, 2) < 0)
+    if (number < 2)
         return PrimalityStatus::Composite;
-    if (mpz_cmp_ui(number, 2) == 0)
+    if (number == 2)
         return PrimalityStatus::Prime;
-    if (mpz_divisible_ui_p(number, 2))
+    if (number % 2 == 0)
         return PrimalityStatus::Composite;
-    if (mpz_perfect_square_p(number))
+    if (mpz_perfect_square_p(number.get_mpz_t()))
         return PrimalityStatus::Composite;
     return PrimalityStatus::ProbablePrime;
 }
 
 template <class PrimalityTest, class... TestSpecificArgs>
-bool PrimalityTestWrapper(mpz_t number, PrimalityTest primality_test, TestSpecificArgs &&... args)
+bool PrimalityTestWrapper(const mpz_class& number, PrimalityTest primality_test, TestSpecificArgs &&... args)
 {
     PrimalityStatus test_result = BasicPrimalityChecks(number);
     if (test_result == PrimalityStatus::ProbablePrime)
@@ -30,6 +30,7 @@ bool PrimalityTestWrapper(mpz_t number, PrimalityTest primality_test, TestSpecif
         return false;
     return true;
 }
+
 
 // В дальнейшем будут добавляться какие-то прослойки, вроде подбора дополнительных параметров для запуска тестов
 //  (или запуск сразу нескольких тестов с разными параметрами)

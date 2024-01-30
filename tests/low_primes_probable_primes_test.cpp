@@ -1,12 +1,15 @@
 #include <chrono>
 #include <fstream>
 #include <iostream>
-
 #include <gtest/gtest.h>
 
-#include "primality_tests_wrapper.h"
+#include "probable_primes.h"
+#include "primality_tests_wrapper.tpp"
 
 namespace large_prime_numbers
+{
+
+namespace
 {
 
 class LowPrimesList : public testing::Test
@@ -16,14 +19,20 @@ protected:
     {
         std::ifstream low_primes_file("primes_2_to_99991.txt", std::ifstream::in);
         assert(low_primes_file);
+
+        // first line of the file contains the number of primes in it
+        int64_t primes_amount;
+        low_primes_file >> primes_amount;
+        low_primes_.reserve(primes_amount);
         int64_t prime;
         while (low_primes_file >> prime)
             low_primes_.push_back(prime);
-        low_primes_file.close();
     }
 
     std::vector<int64_t> low_primes_;
 };
+
+}
 
 template <class PrimalityTest, class... TestSpecificArgs>
 void CheckOnListOfPrimes(const std::string& test_name, const std::vector<int64_t>& list_of_primes,
@@ -32,7 +41,7 @@ void CheckOnListOfPrimes(const std::string& test_name, const std::vector<int64_t
     bool check_result;
     for (mpz_class checked_prime : list_of_primes)
     {
-        check_result = PrimalityTestWrapper(checked_prime.get_mpz_t(), primality_test, std::forward<TestSpecificArgs>(args)...);
+        check_result = PrimalityTestWrapper(checked_prime, primality_test, std::forward<TestSpecificArgs>(args)...);
         if (!check_result)
         {
             EXPECT_TRUE(check_result) << test_name + " marked " << checked_prime << " as not prime";
@@ -45,7 +54,7 @@ TEST_F(LowPrimesList, FermatProbablePrimeTestWithBaseTwo)
     mpz_class base_for_test(2);
     CheckOnListOfPrimes("FermatProbablePrimeTestWithBaseTwo",
                         low_primes_,
-                        FermatProbablePrimeTestWithCheck, base_for_test.get_mpz_t());
+                        FermatProbablePrimeTestWithCheck, base_for_test);
 }
 
 TEST_F(LowPrimesList, MillerRabinProbablePrimeTestWithBaseTwo)
@@ -53,7 +62,7 @@ TEST_F(LowPrimesList, MillerRabinProbablePrimeTestWithBaseTwo)
     mpz_class base_for_test(2);
     CheckOnListOfPrimes("MillerRabinProbablePrimeTestWithBaseTwo",
                         low_primes_,
-                        MillerRabinProbablePrimeTest, base_for_test.get_mpz_t());
+                        MillerRabinProbablePrimeTest, base_for_test);
 }
 
 TEST_F(LowPrimesList, EulerJacobiProbablePrimeTestWithBaseTwo)
@@ -61,7 +70,7 @@ TEST_F(LowPrimesList, EulerJacobiProbablePrimeTestWithBaseTwo)
     mpz_class base_for_test(2);
     CheckOnListOfPrimes("EulerJacobiProbablePrimeTest",
                         low_primes_,
-                        EulerJacobiProbablePrimeTestWithCheck, base_for_test.get_mpz_t());
+                        EulerJacobiProbablePrimeTestWithCheck, base_for_test);
 }
 
 TEST_F(LowPrimesList, LucasProbablePrimeTest)
@@ -82,14 +91,14 @@ TEST_F(LowPrimesList, LucasProbablePrimeTestWithSelfridgeParameters)
 {
     CheckOnListOfPrimes("LucasProbablePrimeTestWithSelfridgeParameters",
                         low_primes_,
-                        LucasProbablePrimeTestWithSelfridgeParameters, kSelfridgeDefaultMaxD);
+                        LucasProbablePrimeTestWithSelfridgeParameters, SelfridgeDetail::kSelfridgeDefaultMaxD);
 }
 
 TEST_F(LowPrimesList, StrongLucasProbablePrimeTestWithSelfridgeParameters)
 {
     CheckOnListOfPrimes("StrongLucasProbablePrimeTestWithSelfridgeParameters",
                         low_primes_,
-                        StrongLucasProbablePrimeTestWithSelfridgeParameters, kSelfridgeDefaultMaxD);
+                        StrongLucasProbablePrimeTestWithSelfridgeParameters, SelfridgeDetail::kSelfridgeDefaultMaxD);
 }
 
 TEST_F(LowPrimesList, BPSWPrimalityTest)
@@ -98,6 +107,5 @@ TEST_F(LowPrimesList, BPSWPrimalityTest)
                         low_primes_,
                         BPSWPrimalityTest);
 }
-
 
 }
