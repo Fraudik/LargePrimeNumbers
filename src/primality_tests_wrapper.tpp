@@ -2,7 +2,7 @@
 
 #include <gmpxx.h>
 
-#include "probable_primality_tests.h"
+#include "probable_prime_tests/probable_primality_tests.h"
 
 namespace large_prime_numbers
 {

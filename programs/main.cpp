@@ -2,7 +2,7 @@
 
 #include "except.h"
 #include "primality_tests_wrapper.tpp"
-#include "probable_primality_tests.h"
+#include "probable_prime_tests/probable_primality_tests.h"
 
 namespace
 {
