@@ -10,4 +10,4 @@ enum class PrimalityStatus
     ProbablePrime,
 };
 
-}
+} // namespace large_prime_numbers

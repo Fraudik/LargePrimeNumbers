@@ -2,7 +2,7 @@
 
 #include <gmpxx.h>
 
-#include "probable_primes.h"
+#include "probable_primality_tests.h"
 
 namespace large_prime_numbers
 {
@@ -31,7 +31,31 @@ bool PrimalityTestWrapper(const mpz_class& number, PrimalityTest primality_test,
     return true;
 }
 
+template <class PrimalityTest>
+bool PrimalityTestWithRandomBaseWrapper(const mpz_class& number, PrimalityTest primality_test, const std::optional<mpz_class>& seed)
+{
+    PrimalityStatus test_result = BasicPrimalityChecks(number);
+    if (test_result == PrimalityStatus::ProbablePrime)
+    {
+        GMPRandomGenerator random_generator(2, number - 1);
+        if (seed != std::nullopt)
+        {
+            random_generator.setSeed(*seed);
+        }
+        mpz_class random_base = random_generator.generateValue();
+        if (!are_coprime(number, random_base))
+        {
+            return false;
+        }
+        test_result = primality_test(number, random_base);
+    }
+
+    if (test_result == PrimalityStatus::Composite)
+        return false;
+    return true;
+}
 
 // В дальнейшем будут добавляться какие-то прослойки, вроде подбора дополнительных параметров для запуска тестов
 //  (или запуск сразу нескольких тестов с разными параметрами)
-}
+
+} // namespace large_prime_numbers

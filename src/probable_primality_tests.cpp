@@ -1,4 +1,4 @@
-#include "probable_primes.h"
+#include "probable_primality_tests.h"
 
 namespace large_prime_numbers
 {
@@ -58,11 +58,9 @@ PrimalityStatus EulerJacobiProbablePrimeTestWithCheck(const mpz_class& number, c
 PrimalityStatus MillerRabinProbablePrimeTest(const mpz_class& number, const mpz_class& base)
 {
     mpz_class number_minus_one{number - 1};
-    // Choose s and r satisfying equality $n = (2^r)*s + 1$ with odd s where $n$ is $number$ and $a$ is $base$
-    uint64_t r = mpz_scan1(number_minus_one.get_mpz_t(), 0);
-    mpz_class s{0};
-    // $s = floor((n - 1) / 2^r)$
-    mpz_fdiv_q_2exp(s.get_mpz_t(), number_minus_one.get_mpz_t(), r);
+    auto decomposition = decompose_in_powers_of_two(number_minus_one);
+    uint64_t r = decomposition.power_of_two;
+    mpz_class s = std::move(decomposition.odd_multiplier);
 
     mpz_class formula_result{0};
     // Check if $a^s mod n = 1$ or $a^s mod n = -1 (n - 1)$ where $n$ is $number$ and $a$ is $base$
@@ -90,4 +88,14 @@ PrimalityStatus BPSWPrimalityTest(const mpz_class& number)
     return StrongLucasProbablePrimeTestWithSelfridgeParameters(number, SelfridgeDetail::kSelfridgeDefaultMaxD);
 }
 
+PrimalityStatus EnhancedBPSWPrimalityTest(const mpz_class& number)
+{
+    auto mr_test_result = MillerRabinProbablePrimeTest(number, mpz_class{2});
+
+    if (mr_test_result != PrimalityStatus::ProbablePrime)
+        return mr_test_result;
+
+    return EnhancedStrongLucasProbablePrimeTestWithSelfridgeParameters(number, SelfridgeDetail::kSelfridgeDefaultMaxD);
 }
+
+} // namespace large_prime_numbers

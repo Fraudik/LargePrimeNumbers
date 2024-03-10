@@ -1,0 +1,33 @@
+#pragma once
+
+#include <gmpxx.h>
+#include <random>
+#include <optional>
+#include <utility>
+
+namespace large_prime_numbers
+{
+
+class GMPRandomGenerator
+{
+public:
+    GMPRandomGenerator(mpz_class low_threshold, mpz_class high_threshold) :
+        low_threshold_(std::move(low_threshold)), high_threshold_(std::move(high_threshold))
+    {}
+
+    void setSeed(const mpz_class& seed) {
+        generator_engine_.seed(seed);
+    }
+
+    // generate value in range [low_threshold; high_threshold]
+    mpz_class generateValue() {
+        return generator_engine_.get_z_range(low_threshold_ + high_threshold_ + 1) - low_threshold_;
+    }
+
+private:
+    mpz_class low_threshold_;
+    mpz_class high_threshold_;
+    gmp_randclass generator_engine_ = gmp_randclass(gmp_randinit_default);
+};
+
+} // namespace large_prime_numbers

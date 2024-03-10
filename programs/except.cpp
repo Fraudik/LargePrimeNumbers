@@ -1,13 +1,20 @@
 #include "except.h"
 
-namespace except {
+namespace except
+{
 
-void react() {
-    try {
+void react()
+{
+    try
+    {
         throw;
-    } catch(std::exception& exc) {
+    }
+    catch (std::exception& exc)
+    {
         std::cerr << "exception: " << exc.what();
-    } catch(...) {
+    }
+    catch (...)
+    {
         std::cerr << "unknown exception thrown";
     }
 }
