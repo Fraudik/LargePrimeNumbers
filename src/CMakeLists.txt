@@ -2,7 +2,8 @@ add_headers_and_sources(primality_tests ${CMAKE_CURRENT_SOURCE_DIR})
 
 add_subdirectory(probable_prime_tests)
 add_subdirectory(deterministic_tests)
+add_subdirectory(quadratic_sieve_factorization)
 
 add_library(primality_tests ${primality_tests_sources})
-target_link_libraries(primality_tests probable_prime_tests)
+target_link_libraries(primality_tests probable_prime_tests deterministic_tests quadratic_sieve_factorization)
 target_link_libraries(primality_tests gmp gmpxx)

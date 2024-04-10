@@ -1,12 +1,8 @@
 #pragma once
 
 #include <gmpxx.h>
-#include <cassert>
 
 #include "../primality_status.h"
-#include "../random_generator.h"
-#include "../utilities.h"
-#include "lucas_pseudoprimes.h"
 
 namespace large_prime_numbers
 {

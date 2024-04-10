@@ -1,7 +1,10 @@
 #pragma once
 
 #include <gmpxx.h>
+#include <optional>
 
+#include "utilities.h"
+#include "random_generator.h"
 #include "probable_prime_tests/probable_primality_tests.h"
 
 namespace large_prime_numbers

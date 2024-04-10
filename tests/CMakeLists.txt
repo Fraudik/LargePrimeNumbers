@@ -10,3 +10,5 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/primes_2_to_99991.txt
         ${CMAKE_CURRENT_BINARY_DIR} COPYONLY)
 
 add_test(low_primes_probable_primes_test)
+add_test(utilities_test)
+add_test(mpqs_test)

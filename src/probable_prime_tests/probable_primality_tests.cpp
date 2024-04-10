@@ -1,6 +1,13 @@
+#include <cassert>
+
+#include "../utilities.h"
+#include "lucas_pseudoprimes.h"
 #include "probable_primality_tests.h"
 
 namespace large_prime_numbers
+{
+
+namespace
 {
 
 // Check if number is Fermat pseudoprime to chosen base
@@ -8,19 +15,11 @@ namespace large_prime_numbers
 PrimalityStatus FermatProbablePrimeTest(const mpz_class& number, const mpz_class& base)
 {
     mpz_class formula_result;
-    mpz_class exponent{number};
-    exponent -= 1;
-    mpz_powm(formula_result.get_mpz_t(), base.get_mpz_t(), exponent.get_mpz_t(), number.get_mpz_t());
-
+    mpz_powm(formula_result.get_mpz_t(), base.get_mpz_t(), static_cast<mpz_class>(number - 1).get_mpz_t(),
+             number.get_mpz_t());
     if (formula_result == 1)
         return PrimalityStatus::ProbablePrime;
     return PrimalityStatus::Composite;
-}
-
-PrimalityStatus FermatProbablePrimeTestWithCheck(const mpz_class& number, const mpz_class& base)
-{
-    assert(are_coprime(number, base));
-    return FermatProbablePrimeTest(number, base);
 }
 
 // Check if number is Euler-Jacobi pseudoprime to chosen base
@@ -33,17 +32,22 @@ PrimalityStatus EulerJacobiProbablePrimeTest(const mpz_class& number, const mpz_
     mpz_divexact_ui(exponent.get_mpz_t(), exponent.get_mpz_t(), 2);
     mpz_powm(left_formula_result.get_mpz_t(), base.get_mpz_t(), exponent.get_mpz_t(), number.get_mpz_t());
 
-    mpz_class right_formula_result{number};
     int jacobi_symbol = mpz_jacobi(base.get_mpz_t(), number.get_mpz_t());
+    mpz_class right_formula_result = 1;
     if (jacobi_symbol == -1)
-        right_formula_result -= 1;
-    else if (jacobi_symbol == 1)
-        right_formula_result += 1;
-    mod(right_formula_result, number);
+        right_formula_result = number - 1;
 
     if (left_formula_result == right_formula_result)
         return PrimalityStatus::ProbablePrime;
     return PrimalityStatus::Composite;
+}
+
+}
+
+PrimalityStatus FermatProbablePrimeTestWithCheck(const mpz_class& number, const mpz_class& base)
+{
+    assert(are_coprime(number, base));
+    return FermatProbablePrimeTest(number, base);
 }
 
 PrimalityStatus EulerJacobiProbablePrimeTestWithCheck(const mpz_class& number, const mpz_class& base)
@@ -85,7 +89,7 @@ PrimalityStatus BPSWPrimalityTest(const mpz_class& number)
     if (mr_test_result != PrimalityStatus::ProbablePrime)
         return mr_test_result;
 
-    return StrongLucasProbablePrimeTestWithSelfridgeParameters(number, SelfridgeDetail::kSelfridgeDefaultMaxD);
+    return StrongLucasProbablePrimeTestWithSelfridgeParameters(number);
 }
 
 PrimalityStatus EnhancedBPSWPrimalityTest(const mpz_class& number)
@@ -95,7 +99,7 @@ PrimalityStatus EnhancedBPSWPrimalityTest(const mpz_class& number)
     if (mr_test_result != PrimalityStatus::ProbablePrime)
         return mr_test_result;
 
-    return EnhancedStrongLucasProbablePrimeTestWithSelfridgeParameters(number, SelfridgeDetail::kSelfridgeDefaultMaxD);
+    return EnhancedStrongLucasProbablePrimeTestWithSelfridgeParameters(number);
 }
 
 } // namespace large_prime_numbers

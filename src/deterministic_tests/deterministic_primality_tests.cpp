@@ -3,6 +3,9 @@
 namespace large_prime_numbers
 {
 
+namespace
+{
+
 PrimalityStatus LucasLehmerPrimalityTest(const mpz_class& mersenne_number, const mp_bitcnt_t& mersenne_power)
 {
     mpz_class sequence_member = 4;
@@ -20,6 +23,8 @@ PrimalityStatus LucasLehmerPrimalityTestWrapper(const mpz_class& number)
 {
     mp_bitcnt_t mersenne_power = mpz_scan0(number.get_mpz_t(), 0);
     return LucasLehmerPrimalityTest(number, mersenne_power);
+}
+
 }
 
 PrimalityStatus LucasLehmerPrimalityTestWrapperWithCheck(const mpz_class& number)

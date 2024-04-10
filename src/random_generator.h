@@ -1,9 +1,6 @@
 #pragma once
 
 #include <gmpxx.h>
-#include <random>
-#include <optional>
-#include <utility>
 
 namespace large_prime_numbers
 {
@@ -21,7 +18,8 @@ public:
 
     // generate value in range [low_threshold; high_threshold]
     mpz_class generateValue() {
-        return generator_engine_.get_z_range(low_threshold_ + high_threshold_ + 1) - low_threshold_;
+        // [0; high_threshold_ - low_threshold_ + 1) + low_threshold_
+        return generator_engine_.get_z_range(high_threshold_ - low_threshold_ + 1) + low_threshold_;
     }
 
 private:

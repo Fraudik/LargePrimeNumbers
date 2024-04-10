@@ -100,3 +100,4 @@ SpacesInCStyleCastParentheses: false
 SpacesInParentheses: false
 SpacesInSquareBrackets: false
 InsertBraces: true
+InsertNewlineAtEOF: true
