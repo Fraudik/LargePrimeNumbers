@@ -8,7 +8,7 @@
 namespace large_prime_numbers
 {
 
-std::optional<mpz_class> FactorWithQuadraticSieve(const mpz_class& number,
+std::optional<mpz_class> TryToGetFactorWithQuadraticSieve(const mpz_class& number,
                                                   const QuadraticSieveConstantParameters& parameters);
 
 } //  namespace large_prime_numbers

@@ -98,14 +98,15 @@ std::optional<mpz_class> TryToGetFactor(const mpz_class& number,
 
 }
 
-std::optional<mpz_class> GetFactorWithDixonAlgorithm(const mpz_class& number,
+std::optional<mpz_class> TryToGetFactorWithDixonAlgorithm(const mpz_class& number,
                                                      const std::vector<mpz_class>& sieved_entries,
                                                      const std::vector<size_t>& factor_base) {
   auto [factored_entries, matrix] = FactorizeCandidates(number, sieved_entries, factor_base);
   BitMatrixGaussianElimination(matrix, factor_base.size());
   for (size_t i = 0; i < factored_entries.size(); i++) {
-    if (auto found_factor = TryToGetFactor(number, matrix[i], factored_entries, factor_base))
-      return *found_factor;
+    std::optional<mpz_class> found_factor = TryToGetFactor(number, matrix[i], factored_entries, factor_base);
+    if (found_factor.has_value())
+      return found_factor.value();
   }
   return std::nullopt;
 }

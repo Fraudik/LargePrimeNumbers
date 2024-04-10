@@ -41,11 +41,11 @@ std::vector<size_t> CalculateFactorBase(const mpz_class& number, size_t required
 
 }
 
-std::optional<mpz_class> FactorWithQuadraticSieve(const mpz_class& number,
+std::optional<mpz_class> TryToGetFactorWithQuadraticSieve(const mpz_class& number,
                                                   const QuadraticSieveConstantParameters& parameters) {
   auto factor_base = CalculateFactorBase(number, parameters.factor_base_size);
   auto sieved_candidates = SieveCandidates(number, factor_base, parameters);
-  return GetFactorWithDixonAlgorithm(number, sieved_candidates, factor_base);
+  return TryToGetFactorWithDixonAlgorithm(number, sieved_candidates, factor_base);
 }
 
 } // namespace large_prime_numbers
