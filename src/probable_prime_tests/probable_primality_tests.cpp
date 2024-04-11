@@ -27,8 +27,7 @@ PrimalityStatus FermatProbablePrimeTest(const mpz_class& number, const mpz_class
 PrimalityStatus EulerJacobiProbablePrimeTest(const mpz_class& number, const mpz_class& base)
 {
     mpz_class left_formula_result;
-    mpz_class exponent{number};
-    exponent -= 1;
+    mpz_class exponent = number - 1;
     mpz_divexact_ui(exponent.get_mpz_t(), exponent.get_mpz_t(), 2);
     mpz_powm(left_formula_result.get_mpz_t(), base.get_mpz_t(), exponent.get_mpz_t(), number.get_mpz_t());
 
@@ -71,7 +70,7 @@ PrimalityStatus MillerRabinProbablePrimeTest(const mpz_class& number, const mpz_
     mpz_powm(formula_result.get_mpz_t(), base.get_mpz_t(), s.get_mpz_t(), number.get_mpz_t());
     if (formula_result == 1 || formula_result == number_minus_one)
         return PrimalityStatus::ProbablePrime;
-    // Check if $a^(2^t * s) mod n = -1 (n - 1)$ for every integer t in (0; r) where $n$ is $number$ and $a$ is $base$
+    // Check if $a^(2^t * s) = -1 \pmod n$ for every integer t in (0; r) where $n$ is $number$ and $a$ is $base$
     while (--r)
     {
         formula_result *= formula_result;

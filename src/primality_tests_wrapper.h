@@ -12,6 +12,8 @@ namespace large_prime_numbers
 
 inline PrimalityStatus BasicPrimalityChecks(const mpz_class& number)
 {
+    if (number == 1)
+      return PrimalityStatus::NeitherPrimeOrComposite;
     if (number < 2)
         return PrimalityStatus::Composite;
     if (number == 2)
@@ -26,17 +28,19 @@ inline PrimalityStatus BasicPrimalityChecks(const mpz_class& number)
 template <class PrimalityTest, class... TestSpecificArgs>
 bool PrimalityTestWrapper(const mpz_class& number, PrimalityTest primality_test, TestSpecificArgs &&... args)
 {
+    assert(number > 0);
     PrimalityStatus test_result = BasicPrimalityChecks(number);
     if (test_result == PrimalityStatus::ProbablePrime)
         test_result = primality_test(number, std::forward<TestSpecificArgs>(args)...);
-    if (test_result == PrimalityStatus::Composite)
-        return false;
-    return true;
+    // Return true only for prime numbers
+    return (test_result != PrimalityStatus::Composite && test_result != PrimalityStatus::NeitherPrimeOrComposite);
 }
 
 template <class PrimalityTest>
-bool PrimalityTestWithRandomBaseWrapper(const mpz_class& number, PrimalityTest primality_test, const std::optional<mpz_class>& seed)
+bool PrimalityTestWithRandomBaseWrapper(const mpz_class& number, PrimalityTest primality_test,
+                                        const std::optional<mpz_class>& seed)
 {
+    assert(number > 0);
     PrimalityStatus test_result = BasicPrimalityChecks(number);
     if (test_result == PrimalityStatus::ProbablePrime)
     {
@@ -53,9 +57,8 @@ bool PrimalityTestWithRandomBaseWrapper(const mpz_class& number, PrimalityTest p
         test_result = primality_test(number, random_base);
     }
 
-    if (test_result == PrimalityStatus::Composite)
-        return false;
-    return true;
+    // Return true only for prime numbers
+    return (test_result != PrimalityStatus::Composite && test_result != PrimalityStatus::NeitherPrimeOrComposite);
 }
 
 // В дальнейшем будут добавляться какие-то прослойки, вроде подбора дополнительных параметров для запуска тестов

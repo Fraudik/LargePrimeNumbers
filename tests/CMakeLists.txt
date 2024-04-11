@@ -1,4 +1,4 @@
-add_headers_and_sources(primality_tests_unit_tests ${CMAKE_CURRENT_SOURCE_DIR})
+add_sources(primality_tests_unit_tests ${CMAKE_CURRENT_SOURCE_DIR})
 
 macro(add_test test_name)
     add_executable(${test_name} ${test_name}.cpp)

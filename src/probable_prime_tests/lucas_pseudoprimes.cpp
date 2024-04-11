@@ -316,10 +316,9 @@ SelfridgeParametersForLucasTest CalculateSelfridgeParametersForLucasTest(const m
 {
     // If number is a perfect square, no required D will exist
     assert(!mpz_perfect_square_p(number.get_mpz_t()));
-
     int64_t p = 1, q;
     mpz_class gmp_d = -3;
-    int jacobi_symbol;
+    int jacobi_symbol = 0;
     while (jacobi_symbol != -1)
     {
         if (gmp_d < 0)
