@@ -11,7 +11,8 @@ namespace large_prime_numbers
 namespace
 {
 
-mpz_class CalculateV(const mpz_class& final_idx, const mpz_class& prime, const mpz_class& h, const mpz_class& n) {
+mpz_class CalculateV(const mpz_class& final_idx, const mpz_class& prime, const mpz_class& h, const mpz_class& n)
+{
   // Using map to cache calculated values
   std::map<mpz_class, mpz_class> v;
   v[1] = h;
@@ -49,7 +50,8 @@ mpz_class CalculateV(const mpz_class& final_idx, const mpz_class& prime, const m
   return calculate_v_by_idx(final_idx);
 }
 
-mpz_class CalculateOneQuadraticCongruence(mpz_class quadratic_residue, const mpz_class& prime) {
+mpz_class CalculateOneQuadraticCongruence(mpz_class quadratic_residue, const mpz_class& prime)
+{
   auto random_generator = GMPRandomGenerator(0, prime - 1);
   random_generator.setSeed(42);
 
@@ -73,7 +75,8 @@ mpz_class CalculateOneQuadraticCongruence(mpz_class quadratic_residue, const mpz
 
 }
 
-std::vector<mpz_class> CalculateQuadraticCongruences(const mpz_class& quadratic_residue, const mpz_class& odd_prime) {
+std::vector<mpz_class> CalculateQuadraticCongruences(const mpz_class& quadratic_residue, const mpz_class& odd_prime)
+{
   assert(odd_prime % 2 != 0);
   mpz_class quadratic_congruence = CalculateOneQuadraticCongruence(quadratic_residue, odd_prime);
   return {quadratic_congruence, odd_prime - quadratic_congruence};

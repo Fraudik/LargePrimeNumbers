@@ -15,7 +15,8 @@ namespace
 bool CanBeFactorizedOverFactorBase(const mpz_class& r,
                                    const mpz_class& n,
                                    const std::vector<size_t>& factor_base,
-                                   std::vector<size_t>& factor_powers) {
+                                   std::vector<size_t>& factor_powers)
+{
   mpz_class g_r = r * r;
   mod(g_r, n);
   assert(g_r > 1);
@@ -33,7 +34,8 @@ bool CanBeFactorizedOverFactorBase(const mpz_class& r,
 // Return factored entries and matrix of factor powers for them
 std::pair<std::vector<mpz_class>, BitMatrix> FactorizeCandidates(const mpz_class& number,
                                                                  const std::vector<mpz_class>& sieved_entries,
-                                                                 const std::vector<size_t>& factor_base) {
+                                                                 const std::vector<size_t>& factor_base)
+{
   std::vector<mpz_class> factorized_entries;
   factorized_entries.reserve(factor_base.size());
 
@@ -60,7 +62,8 @@ std::pair<std::vector<mpz_class>, BitMatrix> FactorizeCandidates(const mpz_class
 std::optional<mpz_class> TryToGetFactor(const mpz_class& number,
                                         const std::vector<bool>& matrix_row,
                                         const std::vector<mpz_class>& factorized_candidates,
-                                        const std::vector<size_t>& factor_base) {
+                                        const std::vector<size_t>& factor_base)
+{
     // Check for row represents a perfect square
     for (size_t column_idx = 0; column_idx < factor_base.size(); ++column_idx) {
       if (matrix_row[column_idx] != 0)
@@ -100,7 +103,8 @@ std::optional<mpz_class> TryToGetFactor(const mpz_class& number,
 
 std::optional<mpz_class> TryToGetFactorWithDixonAlgorithm(const mpz_class& number,
                                                      const std::vector<mpz_class>& sieved_entries,
-                                                     const std::vector<size_t>& factor_base) {
+                                                     const std::vector<size_t>& factor_base)
+{
   auto [factored_entries, matrix] = FactorizeCandidates(number, sieved_entries, factor_base);
   BitMatrixGaussianElimination(matrix, factor_base.size());
   for (size_t i = 0; i < factored_entries.size(); i++) {

@@ -8,7 +8,8 @@ namespace large_prime_numbers
 namespace
 {
 
-void row_xor(std::vector<bool>& lhs_row, const std::vector<bool>& rhs_row) {
+void row_xor(std::vector<bool>& lhs_row, const std::vector<bool>& rhs_row)
+{
   assert(lhs_row.size() == rhs_row.size());
   for (size_t j = 0; j != lhs_row.size(); ++j) {
     lhs_row[j] = lhs_row[j] ^ rhs_row[j];
@@ -17,7 +18,8 @@ void row_xor(std::vector<bool>& lhs_row, const std::vector<bool>& rhs_row) {
 
 }
 
-void BitMatrixGaussianElimination(BitMatrix& matrix, size_t amount_of_columns) {
+void BitMatrixGaussianElimination(BitMatrix& matrix, size_t amount_of_columns)
+{
   for (size_t i = 0; i < amount_of_columns; ++i) {
     // Search for pivot row
     size_t pivot_row_idx = i;

@@ -12,7 +12,8 @@ constexpr size_t kMaxKnownPrime = 99991;
 constexpr size_t kKnownPrimesAmount = 9591;
 constexpr size_t kEstimationCoefficient = 100;
 
-std::vector<size_t> CalculateFactorBase(const mpz_class& number, size_t required_factor_base_size) {
+std::vector<size_t> CalculateFactorBase(const mpz_class& number, size_t required_factor_base_size)
+{
   std::vector<size_t> factor_base{2};
   factor_base.reserve(required_factor_base_size);
 
@@ -42,7 +43,8 @@ std::vector<size_t> CalculateFactorBase(const mpz_class& number, size_t required
 }
 
 std::optional<mpz_class> TryToGetFactorWithQuadraticSieve(const mpz_class& number,
-                                                  const QuadraticSieveConstantParameters& parameters) {
+                                                  const QuadraticSieveConstantParameters& parameters)
+{
   auto factor_base = CalculateFactorBase(number, parameters.factor_base_size);
   auto sieved_candidates = SieveCandidates(number, factor_base, parameters);
   return TryToGetFactorWithDixonAlgorithm(number, sieved_candidates, factor_base);

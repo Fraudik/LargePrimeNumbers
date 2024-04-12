@@ -10,7 +10,8 @@ namespace large_prime_numbers
 
 std::vector<mpz_class> SieveCandidates(const mpz_class& number,
                                        const std::vector<size_t>& factor_base,
-                                       const QuadraticSieveConstantParameters& parameters) {
+                                       const QuadraticSieveConstantParameters& parameters)
+{
   mpz_class n_sqrt;
   mpz_sqrt(n_sqrt.get_mpz_t(), number.get_mpz_t());
   mpz_class k = n_sqrt + 1;
