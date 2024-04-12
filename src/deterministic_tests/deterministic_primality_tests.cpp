@@ -1,4 +1,7 @@
+#include <cassert>
+
 #include "deterministic_primality_tests.h"
+#include "../utilities.h"
 
 namespace large_prime_numbers
 {

@@ -1,11 +1,9 @@
 #pragma once
 
 #include <gmpxx.h>
-#include <cassert>
 #include <optional>
 
 #include "../primality_status.h"
-#include "../utilities.h"
 
 namespace large_prime_numbers
 {

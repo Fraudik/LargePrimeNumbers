@@ -1,7 +1,8 @@
-#include "../utilities.h"
-#include "lucas_pseudoprimes.h"
 #include <cmath>
 #include <iostream>
+
+#include "../utilities.h"
+#include "lucas_pseudoprimes.h"
 
 namespace large_prime_numbers
 {
