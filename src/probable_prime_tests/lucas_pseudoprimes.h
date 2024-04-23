@@ -9,10 +9,12 @@
 namespace large_prime_numbers
 {
 
-PrimalityStatus LucasProbablePrimeTestWithCheck(const mpz_class& number, int64_t p, int64_t q);
-PrimalityStatus AcceleratedLucasProbablePrimeTestWithCheck(const mpz_class& number, int64_t p, int64_t q);
-PrimalityStatus StrongLucasProbablePrimeTestWithCheck(const mpz_class& number, int64_t p, int64_t q);
-PrimalityStatus EnhancedStrongLucasProbablePrimeTestWithCheck(const mpz_class& number, int64_t p, int64_t q);
+PrimalityStatus LucasTestWithCheck(const mpz_class& number, int64_t p, int64_t q);
+PrimalityStatus AcceleratedLucasTestWithCheck(const mpz_class& number, int64_t p, int64_t q);
+PrimalityStatus LucasVTestWithCheck(const mpz_class& number, int64_t p, int64_t q);
+PrimalityStatus AcceleratedLucasVTestWithCheck(const mpz_class& number, int64_t p, int64_t q);
+PrimalityStatus StrongLucasTestWithCheck(const mpz_class& number, int64_t p, int64_t q);
+PrimalityStatus EnhancedStrongLucasTestWithCheck(const mpz_class& number, int64_t p, int64_t q);
 
 struct SelfridgeParametersForLucasTest
 {
@@ -29,11 +31,11 @@ struct LucasSequenceMembers
     mpz_class V_n;
 };
 
-SelfridgeParametersForLucasTest CalculateSelfridgeParametersForLucasTest(const mpz_class& number);
-PrimalityStatus LucasProbablePrimeTestWithSelfridgeParameters(const mpz_class& number);
-PrimalityStatus AcceleratedLucasProbablePrimeTestWithSelfridgeParameters(const mpz_class& number);
-PrimalityStatus StrongLucasProbablePrimeTestWithSelfridgeParameters(const mpz_class& number);
-PrimalityStatus EnhancedStrongLucasProbablePrimeTestWithSelfridgeParameters(const mpz_class& number);
+SelfridgeParametersForLucasTest CalculateSelfridgeParameters(const mpz_class& number);
+PrimalityStatus LucasTestWithSelfridgeParameters(const mpz_class& number);
+PrimalityStatus AcceleratedLucasTestWithSelfridgeParameters(const mpz_class& number);
+PrimalityStatus StrongLucasTestWithSelfridgeParameters(const mpz_class& number);
+PrimalityStatus EnhancedStrongLucasTestWithSelfridgeParameters(const mpz_class& number);
 
 } // namespace large_prime_numbers
 

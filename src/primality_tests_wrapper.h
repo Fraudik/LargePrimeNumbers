@@ -61,7 +61,4 @@ bool PrimalityTestWithRandomBaseWrapper(const mpz_class& number, PrimalityTest p
     return (test_result != PrimalityStatus::Composite && test_result != PrimalityStatus::NeitherPrimeOrComposite);
 }
 
-// В дальнейшем будут добавляться какие-то прослойки, вроде подбора дополнительных параметров для запуска тестов
-//  (или запуск сразу нескольких тестов с разными параметрами)
-
 } // namespace large_prime_numbers

@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 
 #include "utilities.h"
-#include "quadratic_sieve_factorization/multiple_polynomial_quadratic_sieve.h"
+#include "quadratic_sieve_factorization/quadratic_sieve.h"
 
 namespace large_prime_numbers
 {

@@ -1,5 +1,3 @@
-add_sources(primality_tests_unit_tests ${CMAKE_CURRENT_SOURCE_DIR})
-
 macro(add_test test_name)
     add_executable(${test_name} ${test_name}.cpp)
     target_link_libraries(${test_name} PRIVATE primality_tests gtest gtest_main)
@@ -11,4 +9,4 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/primes_2_to_99991.txt
 
 add_test(low_primes_probable_primes_test)
 add_test(utilities_test)
-add_test(mpqs_test)
+add_test(qs_test)

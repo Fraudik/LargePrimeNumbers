@@ -29,16 +29,16 @@ bool LucasPreconditionsCheck(const mpz_class& number, int64_t p, int64_t q)
     return true;
 }
 
-PrimalityStatus LucasVCheck(const mpz_class& V_n, const mpz_class& number, int64_t p, int64_t q)
+PrimalityStatus LucasVTestWithCheck(const mpz_class& V_d, const mpz_class& number, int64_t p, int64_t q)
 {
-    // checking if V_n = 2 * Q^{ (1 - JacobiSymbol(D/n)) / 2 }
+    // checking if V_d = 2 * Q^{ (1 - JacobiSymbol(D/n)) / 2 }
     mpz_class gmp_d = static_cast<mpz_class>(p) * p - 4 * static_cast<mpz_class>(q);
     int jacobi_symbol = mpz_jacobi(gmp_d.get_mpz_t(), number.get_mpz_t());
-    if (jacobi_symbol == 1 && V_n == 2)
+    if (jacobi_symbol == 1 && V_d == 2)
         return PrimalityStatus::ProbablePrime;
     mpz_class right_equation_side = 2 * q;
     mod(right_equation_side, number);
-    if (jacobi_symbol == -1 && V_n == right_equation_side)
+    if (jacobi_symbol == -1 && V_d == right_equation_side)
         return PrimalityStatus::ProbablePrime;
     return PrimalityStatus::Composite;
 }
@@ -53,13 +53,13 @@ struct LucasIntermediateSequenceMembers
 };
 
 LucasIntermediateSequenceMembers LucasSequenceCalculationMainLoop(const mpz_class& loop_start_base,
-                                                                  const int64_t& loop_end,
+                                                                  const size_t& loop_end,
                                                                   const mpz_class& number,
                                                                   int64_t p,
                                                                   int64_t q)
 {
   mpz_class u_h{1}, v_l{2}, v_h{p}, q_l{1}, q_h{1};
-  for (int64_t j = mpz_sizeinbase(loop_start_base.get_mpz_t(), 2) - 1; j >= loop_end; --j)
+  for (size_t j = mpz_sizeinbase(loop_start_base.get_mpz_t(), 2) - 1; j >= loop_end; --j)
   {
         q_l *= q_h;
         mod(q_l, number);
@@ -141,7 +141,7 @@ LucasSequenceMembers LucasSequenceCalculation(const mpz_class& number, int64_t p
     return {u_h, v_l};
 }
 
-PrimalityStatus LucasProbablePrimeTest(const mpz_class& number, int64_t p, int64_t q)
+PrimalityStatus LucasTest(const mpz_class& number, int64_t p, int64_t q)
 {
     auto calculated_members = LucasSequenceCalculation(number, p, q);
     if (calculated_members.U_n == 0)
@@ -149,10 +149,10 @@ PrimalityStatus LucasProbablePrimeTest(const mpz_class& number, int64_t p, int64
     return PrimalityStatus::Composite;
 }
 
-PrimalityStatus LucasVProbablePrimeTest(const mpz_class& number, int64_t p, int64_t q)
+PrimalityStatus LucasVTest(const mpz_class& number, int64_t p, int64_t q)
 {
     auto calculated_members = LucasSequenceCalculation(number, p, q);
-    return LucasVCheck(calculated_members.V_n, number, p, q);
+    return LucasVTestWithCheck(calculated_members.V_n, number, p, q);
 }
 
 LucasSequenceMembers AcceleratedLucasSequenceCalculation(const mpz_class& number, int64_t p, int64_t q)
@@ -161,14 +161,39 @@ LucasSequenceMembers AcceleratedLucasSequenceCalculation(const mpz_class& number
     // $delta_n = n - JacobiSymbol(D/n)$
     int jacobi = mpz_jacobi(gmp_d.get_mpz_t(), number.get_mpz_t());
     mpz_class delta_n = number - jacobi;
-    auto&& [u_h, v_l, v_h, q_l, q_h] = LucasSequenceCalculationMainLoop(delta_n, 0, number, p, q);
+    mpz_class v_l{2}, v_h{p}, q_l{1}, q_h{1};
+    for (int64_t j = mpz_sizeinbase(delta_n.get_mpz_t(), 2) - 1; j >= 0; --j)
+    {
+        q_l *= q_h;
+        mod(q_l, number);
+        if (mpz_tstbit(delta_n.get_mpz_t(), j) == 1)
+        {
+            q_h = q_l * q;
+
+            v_l = v_h * v_l - q_l * p;
+            mod(v_l, number);
+
+            v_h = v_h * v_h - q_h * 2;
+            mod(v_h, number);
+        }
+        else
+        {
+            q_h = q_l;
+
+            v_h = v_h * v_l - q_l * p;
+            mod(v_h, number);
+
+            v_l = v_l * v_l - q_l * 2;
+            mod(v_l, number);
+        }
+    }
     mpz_class u_k = (2 * v_h - p * v_l);
     mod(u_k, number);
     u_k /= gmp_d;
     return {u_k, v_l};
 }
 
-PrimalityStatus AcceleratedLucasProbablePrimeTest(const mpz_class& number, int64_t p, int64_t q)
+PrimalityStatus AcceleratedLucasTest(const mpz_class& number, int64_t p, int64_t q)
 {
     auto calculated_members = AcceleratedLucasSequenceCalculation(number, p, q);
     if (calculated_members.U_n == 0)
@@ -176,14 +201,14 @@ PrimalityStatus AcceleratedLucasProbablePrimeTest(const mpz_class& number, int64
     return PrimalityStatus::Composite;
 }
 
-PrimalityStatus AcceleratedLucasVProbablePrimeTest(const mpz_class& number, int64_t p, int64_t q)
+PrimalityStatus AcceleratedLucasVTest(const mpz_class& number, int64_t p, int64_t q)
 {
     auto calculated_members = AcceleratedLucasSequenceCalculation(number, p, q);
-    return LucasVCheck(calculated_members.V_n, number, p, q);
+    return LucasVTestWithCheck(calculated_members.V_n, number, p, q);
 }
 
 
-PrimalityStatus StrongLucasProbablePrimeTest(const mpz_class& number, int64_t p, int64_t q)
+PrimalityStatus StrongLucasTest(const mpz_class& number, int64_t p, int64_t q)
 {
     mpz_class gmp_d = static_cast<mpz_class>(p) * p - 4 * static_cast<mpz_class>(q);
     // delta_n = n - JacobiSymbol(D/n)
@@ -214,7 +239,7 @@ PrimalityStatus StrongLucasProbablePrimeTest(const mpz_class& number, int64_t p,
     return PrimalityStatus::Composite;
 }
 
-PrimalityStatus EnhancedStrongLucasProbablePrimeTest(const mpz_class& number, int64_t p, int64_t q)
+PrimalityStatus EnhancedStrongLucasTest(const mpz_class& number, int64_t p, int64_t q)
 {
     // this particular test gives an error with 3 as corner case
     if (number == 3)
@@ -251,7 +276,7 @@ PrimalityStatus EnhancedStrongLucasProbablePrimeTest(const mpz_class& number, in
     // Checking if $V_{\delta(n)} \equiv 2Q^{ ((1 - JacobiSymbol(D / n)) / 2} \pmod{n}$
     v_l = v_l * v_l - q_l * 2;
     mod(v_l, number);
-    PrimalityStatus v_check_result = LucasVCheck(v_l, number, p, q);
+    PrimalityStatus v_check_result = LucasVTestWithCheck(v_l, number, p, q);
     if (v_check_result == PrimalityStatus::Composite)
         return v_check_result;
 
@@ -277,43 +302,43 @@ PrimalityStatus EnhancedStrongLucasProbablePrimeTest(const mpz_class& number, in
 
 }
 
-PrimalityStatus LucasProbablePrimeTestWithCheck(const mpz_class& number, int64_t p, int64_t q)
+PrimalityStatus LucasTestWithCheck(const mpz_class& number, int64_t p, int64_t q)
 {
     assert(LucasPreconditionsCheck(number, p, q));
-    return LucasProbablePrimeTest(number, p, q);
+    return LucasTest(number, p, q);
 }
 
-PrimalityStatus LucasVProbablePrimeTestWithCheck(const mpz_class& number, int64_t p, int64_t q)
+PrimalityStatus LucasVTestWithCheck(const mpz_class& number, int64_t p, int64_t q)
 {
     assert(LucasPreconditionsCheck(number, p, q));
-    return LucasVProbablePrimeTest(number, p, q);
+    return LucasVTest(number, p, q);
 }
 
-PrimalityStatus AcceleratedLucasProbablePrimeTestWithCheck(const mpz_class& number, int64_t p, int64_t q)
+PrimalityStatus AcceleratedLucasTestWithCheck(const mpz_class& number, int64_t p, int64_t q)
 {
     assert(LucasPreconditionsCheck(number, p, q));
-    return AcceleratedLucasProbablePrimeTest(number, p, q);
+    return AcceleratedLucasTest(number, p, q);
 }
 
-PrimalityStatus AcceleratedLucasVProbablePrimeTestWithCheck(const mpz_class& number, int64_t p, int64_t q)
+PrimalityStatus AcceleratedLucasVTestWithCheck(const mpz_class& number, int64_t p, int64_t q)
 {
     assert(LucasPreconditionsCheck(number, p, q));
-    return AcceleratedLucasVProbablePrimeTest(number, p, q);
+    return AcceleratedLucasVTest(number, p, q);
 }
 
-PrimalityStatus StrongLucasProbablePrimeTestWithCheck(const mpz_class& number, int64_t p, int64_t q)
+PrimalityStatus StrongLucasTestWithCheck(const mpz_class& number, int64_t p, int64_t q)
 {
     assert(LucasPreconditionsCheck(number, p, q));
-    return StrongLucasProbablePrimeTest(number, p, q);
+    return StrongLucasTest(number, p, q);
 }
 
-PrimalityStatus EnhancedStrongLucasProbablePrimeTestWithCheck(const mpz_class& number, int64_t p, int64_t q)
+PrimalityStatus EnhancedStrongLucasTestWithCheck(const mpz_class& number, int64_t p, int64_t q)
 {
     assert(LucasPreconditionsCheck(number, p, q));
-    return EnhancedStrongLucasProbablePrimeTest(number, p, q);
+    return EnhancedStrongLucasTest(number, p, q);
 }
 
-SelfridgeParametersForLucasTest CalculateSelfridgeParametersForLucasTest(const mpz_class& number)
+SelfridgeParametersForLucasTest CalculateSelfridgeParameters(const mpz_class& number)
 {
     // If number is a perfect square, no required D will exist
     assert(!mpz_perfect_square_p(number.get_mpz_t()));
@@ -357,36 +382,36 @@ SelfridgeParametersForLucasTest CalculateSelfridgeParametersForLucasTest(const m
     return SelfridgeParametersForLucasTest{p, q, PrimalityStatus::ProbablePrime};
 }
 
-PrimalityStatus LucasProbablePrimeTestWithSelfridgeParameters(const mpz_class& number)
+PrimalityStatus LucasTestWithSelfridgeParameters(const mpz_class& number)
 {
-    auto selfridge_parameters = CalculateSelfridgeParametersForLucasTest(number);
+    auto selfridge_parameters = CalculateSelfridgeParameters(number);
     if (selfridge_parameters.pre_test_status != PrimalityStatus::ProbablePrime)
         return selfridge_parameters.pre_test_status;
-    return LucasProbablePrimeTestWithCheck(number, selfridge_parameters.p, selfridge_parameters.q);
+    return LucasTestWithCheck(number, selfridge_parameters.p, selfridge_parameters.q);
 }
 
-PrimalityStatus AcceleratedLucasProbablePrimeTestWithSelfridgeParameters(const mpz_class& number)
+PrimalityStatus AcceleratedLucasTestWithSelfridgeParameters(const mpz_class& number)
 {
-    auto selfridge_parameters = CalculateSelfridgeParametersForLucasTest(number);
+    auto selfridge_parameters = CalculateSelfridgeParameters(number);
     if (selfridge_parameters.pre_test_status != PrimalityStatus::ProbablePrime)
         return selfridge_parameters.pre_test_status;
-    return AcceleratedLucasProbablePrimeTestWithCheck(number, selfridge_parameters.p, selfridge_parameters.q);
+    return AcceleratedLucasTestWithCheck(number, selfridge_parameters.p, selfridge_parameters.q);
 }
 
-PrimalityStatus StrongLucasProbablePrimeTestWithSelfridgeParameters(const mpz_class& number)
+PrimalityStatus StrongLucasTestWithSelfridgeParameters(const mpz_class& number)
 {
-    auto selfridge_parameters = CalculateSelfridgeParametersForLucasTest(number);
+    auto selfridge_parameters = CalculateSelfridgeParameters(number);
     if (selfridge_parameters.pre_test_status != PrimalityStatus::ProbablePrime)
         return selfridge_parameters.pre_test_status;
-    return StrongLucasProbablePrimeTestWithCheck(number, selfridge_parameters.p, selfridge_parameters.q);
+    return StrongLucasTestWithCheck(number, selfridge_parameters.p, selfridge_parameters.q);
 }
 
-PrimalityStatus EnhancedStrongLucasProbablePrimeTestWithSelfridgeParameters(const mpz_class& number)
+PrimalityStatus EnhancedStrongLucasTestWithSelfridgeParameters(const mpz_class& number)
 {
-    auto selfridge_parameters = CalculateSelfridgeParametersForLucasTest(number);
+    auto selfridge_parameters = CalculateSelfridgeParameters(number);
     if (selfridge_parameters.pre_test_status != PrimalityStatus::ProbablePrime)
         return selfridge_parameters.pre_test_status;
-    return EnhancedStrongLucasProbablePrimeTestWithCheck(number, selfridge_parameters.p, selfridge_parameters.q);
+    return EnhancedStrongLucasTestWithCheck(number, selfridge_parameters.p, selfridge_parameters.q);
 }
 
 } // namespace large_prime_numbers

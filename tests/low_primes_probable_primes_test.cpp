@@ -48,37 +48,37 @@ TEST(LowPrimes, EulerJacobiProbablePrimeTestWithBaseTwo)
     CheckOnListOfLowPrimes("EulerJacobiProbablePrimeTest", EulerJacobiProbablePrimeTestWithCheck, base_for_test);
 }
 
-TEST(LowPrimes, LucasProbablePrimeTest)
+TEST(LowPrimes, LucasTest)
 {
-    CheckOnListOfLowPrimes("LucasProbablePrimeTest", LucasProbablePrimeTestWithCheck, 4, 2);
+    CheckOnListOfLowPrimes("LucasTest", LucasTestWithCheck, 4, 2);
 }
 
 TEST(LowPrimes, LucasKovalProbablePrimeTest)
 {
-    CheckOnListOfLowPrimes("LucasKovalProbablePrimeTest", AcceleratedLucasProbablePrimeTestWithCheck, 4, 2);
+    CheckOnListOfLowPrimes("LucasKovalProbablePrimeTest", AcceleratedLucasTestWithCheck, 4, 2);
 }
 
-TEST(LowPrimes, StrongLucasProbablePrimeTest)
+TEST(LowPrimes, StrongLucasTest)
 {
-    CheckOnListOfLowPrimes("StrongLucasProbablePrimeTest", StrongLucasProbablePrimeTestWithCheck, 4, 2);
+    CheckOnListOfLowPrimes("StrongLucasTest", StrongLucasTestWithCheck, 4, 2);
 }
 
-TEST(LowPrimes, LucasProbablePrimeTestWithSelfridgeParameters)
+TEST(LowPrimes, LucasTestWithSelfridgeParameters)
 {
-    CheckOnListOfLowPrimes( "LucasProbablePrimeTestWithSelfridgeParameters",
-                            LucasProbablePrimeTestWithSelfridgeParameters);
+    CheckOnListOfLowPrimes( "LucasTestWithSelfridgeParameters",
+                            LucasTestWithSelfridgeParameters);
 }
 
-TEST(LowPrimes, AcceleratedLucasProbablePrimeTestWithSelfridgeParameters)
+TEST(LowPrimes, AcceleratedLucasTestWithSelfridgeParameters)
 {
-    CheckOnListOfLowPrimes("AcceleratedLucasProbablePrimeTestWithSelfridgeParameters",
-                           AcceleratedLucasProbablePrimeTestWithSelfridgeParameters);
+    CheckOnListOfLowPrimes("AcceleratedLucasTestWithSelfridgeParameters",
+                           AcceleratedLucasTestWithSelfridgeParameters);
 }
 
-TEST(LowPrimes, StrongLucasProbablePrimeTestWithSelfridgeParameters)
+TEST(LowPrimes, StrongLucasTestWithSelfridgeParameters)
 {
-    CheckOnListOfLowPrimes( "StrongLucasProbablePrimeTestWithSelfridgeParameters",
-                            StrongLucasProbablePrimeTestWithSelfridgeParameters);
+    CheckOnListOfLowPrimes( "StrongLucasTestWithSelfridgeParameters",
+                            StrongLucasTestWithSelfridgeParameters);
 }
 
 TEST(LowPrimes, BPSWPrimalityTest)

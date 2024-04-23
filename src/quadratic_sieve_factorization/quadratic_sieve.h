@@ -3,7 +3,7 @@
 #include <optional>
 #include <gmpxx.h>
 
-#include "quadratic_sieving.h"
+#include "sieving.h"
 
 namespace large_prime_numbers
 {

@@ -88,7 +88,7 @@ PrimalityStatus BPSWPrimalityTest(const mpz_class& number)
     if (mr_test_result != PrimalityStatus::ProbablePrime)
         return mr_test_result;
 
-    return StrongLucasProbablePrimeTestWithSelfridgeParameters(number);
+    return StrongLucasTestWithSelfridgeParameters(number);
 }
 
 PrimalityStatus EnhancedBPSWPrimalityTest(const mpz_class& number)
@@ -98,7 +98,7 @@ PrimalityStatus EnhancedBPSWPrimalityTest(const mpz_class& number)
     if (mr_test_result != PrimalityStatus::ProbablePrime)
         return mr_test_result;
 
-    return EnhancedStrongLucasProbablePrimeTestWithSelfridgeParameters(number);
+    return EnhancedStrongLucasTestWithSelfridgeParameters(number);
 }
 
 } // namespace large_prime_numbers

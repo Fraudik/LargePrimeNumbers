@@ -1,4 +1,4 @@
-#include "multiple_polynomial_quadratic_sieve.h"
+#include "quadratic_sieve.h"
 #include "dixons_algorithm.h"
 #include "../utilities.h"
 

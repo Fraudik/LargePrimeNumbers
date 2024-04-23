@@ -1,7 +1,7 @@
 #include <vector>
 #include <cmath>
 
-#include "quadratic_sieving.h"
+#include "sieving.h"
 #include "quadratic_congruences_solving.h"
 #include "../utilities.h"
 
@@ -28,7 +28,7 @@ std::vector<mpz_class> SieveCandidates(const mpz_class& number,
     for (const mpz_class& congruence : congruences) {
       mpz_class accumulation_start = (k / p) * p + congruence;
       if (accumulation_start < k) {
-        accumulation_start = accumulation_start + p;
+        accumulation_start += p;
       }
       mpz_class accumulation_start_idx = (accumulation_start - k);
       for (size_t i = accumulation_start_idx.get_ui(); i < 2 * parameters.M; i += p) {

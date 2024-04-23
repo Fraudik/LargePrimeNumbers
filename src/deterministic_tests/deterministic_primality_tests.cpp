@@ -11,6 +11,11 @@ namespace
 
 PrimalityStatus LucasLehmerPrimalityTest(const mpz_class& mersenne_number, size_t mersenne_power)
 {
+    // Optimization: Mersenne number can not be prime if it's power is not prime
+    if (TrialDivisionToSqrtPrimalityTest(mersenne_power) == PrimalityStatus::Composite) {
+      return PrimalityStatus::Composite;
+    }
+
     mpz_class sequence_member = 4;
     for (size_t i = 0; i < mersenne_power - 2; ++i)
     {
