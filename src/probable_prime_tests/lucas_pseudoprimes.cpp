@@ -29,7 +29,7 @@ bool LucasPreconditionsCheck(const mpz_class& number, int64_t p, int64_t q)
     return true;
 }
 
-PrimalityStatus LucasVTestWithCheck(const mpz_class& V_d, const mpz_class& number, int64_t p, int64_t q)
+PrimalityStatus LucasVCheck(const mpz_class& V_d, const mpz_class& number, int64_t p, int64_t q)
 {
     // checking if V_d = 2 * Q^{ (1 - JacobiSymbol(D/n)) / 2 }
     mpz_class gmp_d = static_cast<mpz_class>(p) * p - 4 * static_cast<mpz_class>(q);
@@ -152,7 +152,7 @@ PrimalityStatus LucasTest(const mpz_class& number, int64_t p, int64_t q)
 PrimalityStatus LucasVTest(const mpz_class& number, int64_t p, int64_t q)
 {
     auto calculated_members = LucasSequenceCalculation(number, p, q);
-    return LucasVTestWithCheck(calculated_members.V_n, number, p, q);
+    return LucasVCheck(calculated_members.V_n, number, p, q);
 }
 
 LucasSequenceMembers AcceleratedLucasSequenceCalculation(const mpz_class& number, int64_t p, int64_t q)
@@ -204,7 +204,7 @@ PrimalityStatus AcceleratedLucasTest(const mpz_class& number, int64_t p, int64_t
 PrimalityStatus AcceleratedLucasVTest(const mpz_class& number, int64_t p, int64_t q)
 {
     auto calculated_members = AcceleratedLucasSequenceCalculation(number, p, q);
-    return LucasVTestWithCheck(calculated_members.V_n, number, p, q);
+    return LucasVCheck(calculated_members.V_n, number, p, q);
 }
 
 
@@ -276,7 +276,7 @@ PrimalityStatus EnhancedStrongLucasTest(const mpz_class& number, int64_t p, int6
     // Checking if $V_{\delta(n)} \equiv 2Q^{ ((1 - JacobiSymbol(D / n)) / 2} \pmod{n}$
     v_l = v_l * v_l - q_l * 2;
     mod(v_l, number);
-    PrimalityStatus v_check_result = LucasVTestWithCheck(v_l, number, p, q);
+    PrimalityStatus v_check_result = LucasVCheck(v_l, number, p, q);
     if (v_check_result == PrimalityStatus::Composite)
         return v_check_result;
 
@@ -308,7 +308,7 @@ PrimalityStatus LucasTestWithCheck(const mpz_class& number, int64_t p, int64_t q
     return LucasTest(number, p, q);
 }
 
-PrimalityStatus LucasVTestWithCheck(const mpz_class& number, int64_t p, int64_t q)
+PrimalityStatus LucasVCheck(const mpz_class& number, int64_t p, int64_t q)
 {
     assert(LucasPreconditionsCheck(number, p, q));
     return LucasVTest(number, p, q);
@@ -320,7 +320,7 @@ PrimalityStatus AcceleratedLucasTestWithCheck(const mpz_class& number, int64_t p
     return AcceleratedLucasTest(number, p, q);
 }
 
-PrimalityStatus AcceleratedLucasVTestWithCheck(const mpz_class& number, int64_t p, int64_t q)
+PrimalityStatus AcceleratedLucasVCheck(const mpz_class& number, int64_t p, int64_t q)
 {
     assert(LucasPreconditionsCheck(number, p, q));
     return AcceleratedLucasVTest(number, p, q);

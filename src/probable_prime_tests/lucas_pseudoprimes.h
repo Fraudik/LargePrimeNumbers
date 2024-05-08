@@ -11,8 +11,8 @@ namespace large_prime_numbers
 
 PrimalityStatus LucasTestWithCheck(const mpz_class& number, int64_t p, int64_t q);
 PrimalityStatus AcceleratedLucasTestWithCheck(const mpz_class& number, int64_t p, int64_t q);
-PrimalityStatus LucasVTestWithCheck(const mpz_class& number, int64_t p, int64_t q);
-PrimalityStatus AcceleratedLucasVTestWithCheck(const mpz_class& number, int64_t p, int64_t q);
+PrimalityStatus LucasVCheck(const mpz_class& number, int64_t p, int64_t q);
+PrimalityStatus AcceleratedLucasVCheck(const mpz_class& number, int64_t p, int64_t q);
 PrimalityStatus StrongLucasTestWithCheck(const mpz_class& number, int64_t p, int64_t q);
 PrimalityStatus EnhancedStrongLucasTestWithCheck(const mpz_class& number, int64_t p, int64_t q);
 

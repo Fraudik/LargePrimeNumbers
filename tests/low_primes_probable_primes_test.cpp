@@ -39,7 +39,7 @@ TEST(LowPrimes, FermatProbablePrimeTestWithBaseTwo)
 TEST(LowPrimes, MillerRabinProbablePrimeTestWithBaseTwo)
 {
     mpz_class base_for_test(2);
-    CheckOnListOfLowPrimes("MillerRabinProbablePrimeTestWithBaseTwo", MillerRabinProbablePrimeTest, base_for_test);
+    CheckOnListOfLowPrimes("MillerRabinProbablePrimeTestWithBaseTwo", MillerRabinProbablePrimeTestWithCheck, base_for_test);
 }
 
 TEST(LowPrimes, EulerJacobiProbablePrimeTestWithBaseTwo)

@@ -41,21 +41,6 @@ PrimalityStatus EulerJacobiProbablePrimeTest(const mpz_class& number, const mpz_
     return PrimalityStatus::Composite;
 }
 
-}
-
-PrimalityStatus FermatProbablePrimeTestWithCheck(const mpz_class& number, const mpz_class& base)
-{
-    assert(are_coprime(number, base));
-    return FermatProbablePrimeTest(number, base);
-}
-
-PrimalityStatus EulerJacobiProbablePrimeTestWithCheck(const mpz_class& number, const mpz_class& base)
-{
-    assert(are_coprime(number, base));
-    assert(number % 2 != 0);
-    return EulerJacobiProbablePrimeTest(number, base);
-}
-
 // Check if n is Miller-Rabin strong probable prime to base a
 // Check if $a^s mod n = 1$ or $a^(2^t * s) mod n = -1$ for every integer t in [0; r) where $n$ is $number$ and $a$ is $base$
 PrimalityStatus MillerRabinProbablePrimeTest(const mpz_class& number, const mpz_class& base)
@@ -81,9 +66,32 @@ PrimalityStatus MillerRabinProbablePrimeTest(const mpz_class& number, const mpz_
     return PrimalityStatus::Composite;
 }
 
+}
+
+PrimalityStatus FermatProbablePrimeTestWithCheck(const mpz_class& number, const mpz_class& base)
+{
+    assert(are_coprime(number, base));
+    return FermatProbablePrimeTest(number, base);
+}
+
+PrimalityStatus EulerJacobiProbablePrimeTestWithCheck(const mpz_class& number, const mpz_class& base)
+{
+    assert(are_coprime(number, base));
+    assert(number % 2 != 0);
+    return EulerJacobiProbablePrimeTest(number, base);
+}
+
+PrimalityStatus MillerRabinProbablePrimeTestWithCheck(const mpz_class& number, const mpz_class& base)
+{
+    assert(are_coprime(number, base));
+    assert(number > 2);
+    assert(number % 2 != 0);
+    return MillerRabinProbablePrimeTest(number, base);
+}
+
 PrimalityStatus BPSWPrimalityTest(const mpz_class& number)
 {
-    auto mr_test_result = MillerRabinProbablePrimeTest(number, mpz_class{2});
+    auto mr_test_result = MillerRabinProbablePrimeTestWithCheck(number, mpz_class{2});
 
     if (mr_test_result != PrimalityStatus::ProbablePrime)
         return mr_test_result;
@@ -93,7 +101,7 @@ PrimalityStatus BPSWPrimalityTest(const mpz_class& number)
 
 PrimalityStatus EnhancedBPSWPrimalityTest(const mpz_class& number)
 {
-    auto mr_test_result = MillerRabinProbablePrimeTest(number, mpz_class{2});
+    auto mr_test_result = MillerRabinProbablePrimeTestWithCheck(number, mpz_class{2});
 
     if (mr_test_result != PrimalityStatus::ProbablePrime)
         return mr_test_result;

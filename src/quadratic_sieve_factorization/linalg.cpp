@@ -8,7 +8,7 @@ namespace large_prime_numbers
 namespace
 {
 
-void row_xor(std::vector<bool>& lhs_row, const std::vector<bool>& rhs_row)
+void row_xor(std::vector<uint8_t>& lhs_row, const std::vector<uint8_t>& rhs_row)
 {
   assert(lhs_row.size() == rhs_row.size());
   for (size_t j = 0; j != lhs_row.size(); ++j) {

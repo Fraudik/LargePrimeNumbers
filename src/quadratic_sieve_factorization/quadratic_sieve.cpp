@@ -9,7 +9,6 @@ namespace
 {
 
 constexpr size_t kMaxKnownPrime = 99991;
-constexpr size_t kKnownPrimesAmount = 9591;
 constexpr size_t kEstimationCoefficient = 100;
 
 std::vector<size_t> CalculateFactorBase(const mpz_class& number, size_t required_factor_base_size)
@@ -18,14 +17,10 @@ std::vector<size_t> CalculateFactorBase(const mpz_class& number, size_t required
   factor_base.reserve(required_factor_base_size);
 
   // recommended factor base size for 66 digits is 4500 -- and 9590'th prime is 99991
-  size_t eratosthenes_sieve_size;
-  if (required_factor_base_size > kKnownPrimesAmount)
-    // n'th prime p_n ~ n * log(n) as n tends to infinity
-    eratosthenes_sieve_size = (required_factor_base_size *
+  // n'th prime p_n ~ n * log(n) as n tends to infinity
+  size_t eratosthenes_sieve_size = std::max(static_cast<size_t>(required_factor_base_size *
         std::llround(mpz_log(required_factor_base_size)) *
-        kEstimationCoefficient);
-  else
-    eratosthenes_sieve_size = kMaxKnownPrime;
+        kEstimationCoefficient), kMaxKnownPrime);
   std::vector<bool> eratosthenes_sieve(eratosthenes_sieve_size, true);
   for (size_t i = 3; i < eratosthenes_sieve_size && factor_base.size() < required_factor_base_size; i += 2) {
     if (eratosthenes_sieve[i]) {

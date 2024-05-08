@@ -5,7 +5,8 @@
 namespace large_prime_numbers
 {
 
-using BitMatrix = std::vector<std::vector<bool>>;
+// Using the smallest available and efficient type (due to performance issues of vector<bool>)
+using BitMatrix = std::vector<std::vector<uint8_t>>;
 
 void BitMatrixGaussianElimination(BitMatrix& matrix, size_t amount_of_columns);
 

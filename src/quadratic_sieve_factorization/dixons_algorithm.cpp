@@ -39,7 +39,7 @@ std::pair<std::vector<mpz_class>, BitMatrix> FactorizeCandidates(const mpz_class
   std::vector<mpz_class> factorized_entries;
   factorized_entries.reserve(factor_base.size());
 
-  BitMatrix matrix(factor_base.size() + 1, std::vector<bool>(2 * factor_base.size() + 1));
+  BitMatrix matrix(factor_base.size() + 1, std::vector<uint8_t>(2 * factor_base.size() + 1));
   std::vector<size_t> factor_powers(factor_base.size());
   size_t amount_of_factored_entries = 0;
   for (const mpz_class& entry : sieved_entries) {
@@ -60,7 +60,7 @@ std::pair<std::vector<mpz_class>, BitMatrix> FactorizeCandidates(const mpz_class
 }
 
 std::optional<mpz_class> TryToGetFactor(const mpz_class& number,
-                                        const std::vector<bool>& matrix_row,
+                                        const std::vector<uint8_t>& matrix_row,
                                         const std::vector<mpz_class>& factorized_candidates,
                                         const std::vector<size_t>& factor_base)
 {
