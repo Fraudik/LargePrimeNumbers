@@ -26,7 +26,8 @@ BENCHMARK_CAPTURE(EnhancedStrongLucasTestWithSelfridgeParameters, big_prime_11, 
 
 
 template<class BenchmarkedFunction, class... Args>
-void BenchmarkFunction(benchmark::State& state, BenchmarkedFunction benchmarked_function, Args&&... args) {
+void BenchmarkFunction(benchmark::State& state, BenchmarkedFunction benchmarked_function, Args&&... args)
+{
   auto args_tuple = std::make_tuple(std::move(args)...);
   mpz_class prime{std::get<0>(args_tuple), 10};
   for (auto _ : state) {
@@ -35,7 +36,8 @@ void BenchmarkFunction(benchmark::State& state, BenchmarkedFunction benchmarked_
 }
 
 template<class BenchmarkedFunction, class... Args>
-void BenchmarkFunctionWithTwoBasesWithOneBase(benchmark::State& state, BenchmarkedFunction benchmarked_function, Args&&... args) {
+void BenchmarkFunctionWithTwoBasesWithOneBase(benchmark::State& state, BenchmarkedFunction benchmarked_function, Args&&... args)
+{
   auto args_tuple = std::make_tuple(std::move(args)...);
   mpz_class prime{std::get<0>(args_tuple), 10};
   for (auto _ : state) {
@@ -44,7 +46,8 @@ void BenchmarkFunctionWithTwoBasesWithOneBase(benchmark::State& state, Benchmark
 }
 
 template<class BenchmarkedFunction, class... Args>
-void BenchmarkFunctionWithTwoBases(benchmark::State& state, BenchmarkedFunction benchmarked_function, Args&&... args) {
+void BenchmarkFunctionWithTwoBases(benchmark::State& state, BenchmarkedFunction benchmarked_function, Args&&... args)
+{
   auto args_tuple = std::make_tuple(std::move(args)...);
   mpz_class prime{std::get<0>(args_tuple), 10};
   for (auto _ : state) {
