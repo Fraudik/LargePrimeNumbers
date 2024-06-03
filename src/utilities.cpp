@@ -18,5 +18,5 @@ TwoPowersDecomposition decompose_in_powers_of_two(const mpz_class& a)
     mpz_fdiv_q_2exp((decomposition.odd_multiplier).get_mpz_t(), a.get_mpz_t(), decomposition.power_of_two);
     return decomposition;
 }
-s
+
 } // namespace large_prime_numbers
