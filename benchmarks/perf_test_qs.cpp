@@ -1,10 +1,8 @@
 #include <gmpxx.h>
-#include <iostream>
 #include <optional>
 #include <benchmark/benchmark.h>
 
 #include "quadratic_sieve_factorization/quadratic_sieve.h"
-#include "utility.h"
 
 namespace large_prime_numbers
 {

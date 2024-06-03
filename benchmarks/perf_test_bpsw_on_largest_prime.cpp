@@ -1,12 +1,10 @@
-#include <gmpxx.h>
 #include <iostream>
 #include <benchmark/benchmark.h>
 
 #include "probable_prime_tests/probable_primality_tests.h"
 #include "probable_prime_tests/lucas_pseudoprimes.h"
-#include "utility.h"
+#include "benchmarks_utility.h"
 
-namespace large_prime_numbers
 {
 namespace
 {
@@ -28,7 +26,7 @@ void EnhancedStrongLucasTest(benchmark::State& state, Args&&... args) {
 
 template <class... Args>
 void EnhancedStrongLucasTestWithSelfridgeParameters(benchmark::State& state, Args&&... args) {
-  BenchmarkFunction(state, EnhancedStrongLucasTestWithSelfridgeParameters, std::move(args)...);
+  BenchmarkFunction(state, large_prime_numbers::EnhancedStrongLucasTestWithSelfridgeParameters, std::move(args)...);
 }
 
 }

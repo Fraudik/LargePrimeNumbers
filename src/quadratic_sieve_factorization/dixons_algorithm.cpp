@@ -8,9 +8,6 @@
 namespace large_prime_numbers
 {
 
-namespace
-{
-
 // Fills factor_powers and returns true if $g(r) = r * r \pmod n$ can be fully factorized
 bool CanBeFactorizedOverFactorBase(const mpz_class& r,
                                    const mpz_class& n,
@@ -97,8 +94,6 @@ std::optional<mpz_class> TryToGetFactor(const mpz_class& number,
     if (possible_factor != 1 && possible_factor != number)
       return possible_factor;
   return std::nullopt;
-}
-
 }
 
 std::optional<mpz_class> TryToGetFactorWithDixonAlgorithm(const mpz_class& number,

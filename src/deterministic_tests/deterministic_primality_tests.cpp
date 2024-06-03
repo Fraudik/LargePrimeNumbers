@@ -5,7 +5,6 @@
 
 namespace large_prime_numbers
 {
-
 namespace
 {
 
@@ -22,7 +21,7 @@ PrimalityStatus LucasLehmerPrimalityTest(const mpz_class& mersenne_number, size_
         sequence_member = ((sequence_member * sequence_member) - 2);
         mod(sequence_member, mersenne_number);
     }
-    if (sequence_member == 0)
+    if (sequence_member == 0 || mersenne_power == 2)
         return PrimalityStatus::Prime;
     return PrimalityStatus::Composite;
 }
@@ -37,13 +36,14 @@ PrimalityStatus LucasLehmerPrimalityTestWrapper(const mpz_class& number)
 
 PrimalityStatus LucasLehmerPrimalityTestWrapperWithCheck(const mpz_class& number)
 {
+    // Checking that number + 1 is power of two
     assert((number & (number + 1)) == 0);
     return LucasLehmerPrimalityTestWrapper(number);
 }
 
 PrimalityStatus TrialDivisionPrimalityTest(const mpz_class& number, const mpz_class& threshold)
 {
-    if (number % 2 == 0)
+    if (number % 2 == 0 && number != 2)
         return PrimalityStatus::Composite;
     for (mpz_class i = 3; i <= threshold; i += 2)
         if (number % i == 0)
@@ -58,7 +58,7 @@ PrimalityStatus TrialDivisionToSqrtPrimalityTest(const mpz_class& number)
     mpz_sqrt(threshold.get_mpz_t(), number.get_mpz_t());
 
     auto test_result = TrialDivisionPrimalityTest(number, threshold);
-    // if iterating over $\sqrt(number) + 1$ and no factors were found during the trial division, such a number is prime
+    // If iterating over $\sqrt(number) + 1$ and no factors were found during the trial division, such a number is prime
     if (test_result == PrimalityStatus::ProbablePrime)
         return PrimalityStatus::Prime;
     return PrimalityStatus::Composite;

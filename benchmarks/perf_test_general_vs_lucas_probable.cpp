@@ -1,10 +1,9 @@
-#include <gmpxx.h>
 #include <iostream>
 #include <benchmark/benchmark.h>
 
 #include "probable_prime_tests/lucas_pseudoprimes.h"
 #include "probable_prime_tests/probable_primality_tests.h"
-#include "utility.h"
+#include "benchmarks_utility.h"
 
 namespace large_prime_numbers
 {
@@ -13,7 +12,7 @@ namespace
 
 template <class ...Args>
 void FermatProbablePrimeTest(benchmark::State& state, Args&&... args) {
-  BenchmarkFunctionWithTwoBasesWithOneBase(state, FermatProbablePrimeTestWithCheck, std::move(args)...);
+  BenchmarkFunctionWithOneBase(state, FermatProbablePrimeTestWithCheck, std::move(args)...);
 }
 
 template <class ...Args>
@@ -23,7 +22,7 @@ void AcceleratedLucasVTest(benchmark::State& state, Args&&... args) {
 
 template <class... Args>
 void EnhancedStrongLucasTestWithSelfridgeParameters(benchmark::State& state, Args&&... args) {
-  BenchmarkFunction(state, EnhancedStrongLucasTestWithSelfridgeParameters, std::move(args)...);
+  BenchmarkFunction(state, large_prime_numbers::EnhancedStrongLucasTestWithSelfridgeParameters, std::move(args)...);
 }
 
 }

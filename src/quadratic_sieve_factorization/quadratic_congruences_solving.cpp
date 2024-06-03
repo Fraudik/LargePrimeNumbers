@@ -7,7 +7,6 @@
 
 namespace large_prime_numbers
 {
-
 namespace
 {
 
