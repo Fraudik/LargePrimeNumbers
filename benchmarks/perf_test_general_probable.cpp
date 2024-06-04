@@ -10,25 +10,25 @@ namespace
 {
 
 template <class ...Args>
-void FermatProbablePrimeTest(benchmark::State& state, Args&&... args) {
+void FermatProbablePrimeTestBenchmark(benchmark::State& state, Args&&... args) {
   BenchmarkFunctionWithOneBase(state, FermatProbablePrimeTestWithCheck, std::move(args)...);
 }
 
 template <class ...Args>
-void EulerJacobiProbablePrimeTest(benchmark::State& state, Args&&... args) {
+void EulerJacobiProbablePrimeTestBenchmark(benchmark::State& state, Args&&... args) {
   BenchmarkFunctionWithOneBase(state, EulerJacobiProbablePrimeTestWithCheck, std::move(args)...);
 }
 
 template <class ...Args>
-void MillerRabinProbablePrimeTest(benchmark::State& state, Args&&... args) {
+void MillerRabinProbablePrimeTestBenchmark(benchmark::State& state, Args&&... args) {
   BenchmarkFunctionWithOneBase(state, MillerRabinProbablePrimeTestWithCheck, std::move(args)...);
 }
 
 }
 
-BenchmarkOnFourLargestPrimes(FermatProbablePrimeTest)
-BenchmarkOnFourLargestPrimes(EulerJacobiProbablePrimeTest)
-BenchmarkOnFourLargestPrimes(MillerRabinProbablePrimeTest)
+BenchmarkOnFourLargestPrimes(FermatProbablePrimeTestBenchmark)
+BenchmarkOnFourLargestPrimes(EulerJacobiProbablePrimeTestBenchmark)
+BenchmarkOnFourLargestPrimes(MillerRabinProbablePrimeTestBenchmark)
 
 } // namespace large_prime_numbers
 

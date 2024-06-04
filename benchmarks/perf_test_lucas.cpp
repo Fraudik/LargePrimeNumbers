@@ -10,37 +10,37 @@ namespace
 {
 
 template <class ...Args>
-void LucasTest(benchmark::State& state, Args&&... args) {
+void LucasTestBenchmark(benchmark::State& state, Args&&... args) {
   BenchmarkFunctionWithTwoBases(state, LucasTestWithCheck, std::move(args)...);
 }
 
 template <class ...Args>
-void AcceleratedLucasTest(benchmark::State& state, Args&&... args) {
+void AcceleratedLucasTestBenchmark(benchmark::State& state, Args&&... args) {
   BenchmarkFunctionWithTwoBases(state, AcceleratedLucasTestWithCheck, std::move(args)...);
 }
 
 template <class... Args>
-void LucasVTest(benchmark::State& state, Args&&... args) {
+void LucasVTestBenchmark(benchmark::State& state, Args&&... args) {
   BenchmarkFunctionWithTwoBases(state, LucasVTestWithCheck, std::move(args)...);
 }
 
 template <class ...Args>
-void AcceleratedLucasVTest(benchmark::State& state, Args&&... args) {
+void AcceleratedLucasVTestBenchmark(benchmark::State& state, Args&&... args) {
     BenchmarkFunctionWithTwoBases(state, AcceleratedLucasVTestWithCheck, std::move(args)...);
 }
 
 template <class... Args>
-void StrongLucasTest(benchmark::State& state, Args&&... args) {
+void StrongLucasTestBenchmark(benchmark::State& state, Args&&... args) {
   BenchmarkFunctionWithTwoBases(state, StrongLucasTestWithCheck, std::move(args)...);
 }
 
 }
 
-BenchmarkOnFourLargestPrimes(LucasTest)
-BenchmarkOnFourLargestPrimes(AcceleratedLucasTest)
-BenchmarkOnFourLargestPrimes(LucasVTest)
-BenchmarkOnFourLargestPrimes(AcceleratedLucasVTest)
-BenchmarkOnFourLargestPrimes(StrongLucasTest)
+BenchmarkOnFourLargestPrimes(LucasTestBenchmark)
+BenchmarkOnFourLargestPrimes(LucasVTestBenchmark)
+BenchmarkOnFourLargestPrimes(LucasVTestBenchmark)
+BenchmarkOnFourLargestPrimes(AcceleratedLucasVTestBenchmark)
+BenchmarkOnFourLargestPrimes(StrongLucasTestBenchmark)
 
 } // namespace large_prime_numbers
 

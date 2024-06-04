@@ -11,25 +11,25 @@ namespace
 {
 
 template <class ...Args>
-void FermatProbablePrimeTest(benchmark::State& state, Args&&... args) {
+void FermatProbablePrimeTestBenchmark(benchmark::State& state, Args&&... args) {
   BenchmarkFunctionWithOneBase(state, FermatProbablePrimeTestWithCheck, std::move(args)...);
 }
 
 template <class ...Args>
-void AcceleratedLucasVTest(benchmark::State& state, Args&&... args) {
+void AcceleratedLucasVTestBenchmark(benchmark::State& state, Args&&... args) {
     BenchmarkFunctionWithTwoBases(state, AcceleratedLucasVTestWithCheck, std::move(args)...);
 }
 
 template <class... Args>
-void EnhancedStrongLucasTestWithSelfridgeParameters(benchmark::State& state, Args&&... args) {
-  BenchmarkFunction(state, large_prime_numbers::EnhancedStrongLucasTestWithSelfridgeParameters, std::move(args)...);
+void EnhancedStrongLucasTestWithSelfridgeParametersBenchmark(benchmark::State& state, Args&&... args) {
+  BenchmarkFunction(state, EnhancedStrongLucasTestWithSelfridgeParameters, std::move(args)...);
 }
 
 }
 
-BenchmarkOnFourLargestPrimes(FermatProbablePrimeTest)
-BenchmarkOnFourLargestPrimes(EnhancedStrongLucasTestWithSelfridgeParameters)
-BenchmarkOnFourLargestPrimes(AcceleratedLucasVTest)
+BenchmarkOnFourLargestPrimes(FermatProbablePrimeTestBenchmark)
+BenchmarkOnFourLargestPrimes(EnhancedStrongLucasTestWithSelfridgeParametersBenchmark)
+BenchmarkOnFourLargestPrimes(AcceleratedLucasVTestBenchmark)
 
 } // namespace large_prime_numbers
 

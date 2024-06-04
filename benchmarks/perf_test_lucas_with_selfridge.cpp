@@ -10,55 +10,55 @@ namespace
 {
 
 template <class ...Args>
-void LucasTest(benchmark::State& state, Args&&... args) {
+void LucasTestBenchmark(benchmark::State& state, Args&&... args) {
   BenchmarkFunctionWithTwoBases(state, LucasTestWithCheck, std::move(args)...);
 }
 
 template <class ...Args>
-void LucasTestWithSelfridgeParameters(benchmark::State& state, Args&&... args) {
-  BenchmarkFunction(state, large_prime_numbers::LucasTestWithSelfridgeParameters, std::move(args)...);
+void LucasTestWithSelfridgeParametersBenchmark(benchmark::State& state, Args&&... args) {
+  BenchmarkFunction(state, LucasTestWithSelfridgeParameters, std::move(args)...);
 }
 
 template <class ...Args>
-void AcceleratedLucasTest(benchmark::State& state, Args&&... args) {
+void AcceleratedLucasTestBenchmark(benchmark::State& state, Args&&... args) {
     BenchmarkFunctionWithTwoBases(state, AcceleratedLucasTestWithCheck, std::move(args)...);
 }
 
 template <class ...Args>
-void AcceleratedLucasTestWithSelfridgeParameters(benchmark::State& state, Args&&... args) {
-  BenchmarkFunction(state, large_prime_numbers::AcceleratedLucasTestWithSelfridgeParameters, std::move(args)...);
+void AcceleratedLucasTestWithSelfridgeParametersBenchmark(benchmark::State& state, Args&&... args) {
+  BenchmarkFunction(state, AcceleratedLucasTestWithSelfridgeParameters, std::move(args)...);
 }
 
 template <class... Args>
-void StrongLucasTest(benchmark::State& state, Args&&... args) {
+void StrongLucasTestBenchmark(benchmark::State& state, Args&&... args) {
   BenchmarkFunctionWithTwoBases(state, StrongLucasTestWithCheck, std::move(args)...);
 }
 
 template <class... Args>
-void StrongLucasTestWithSelfridgeParameters(benchmark::State& state, Args&&... args) {
-  BenchmarkFunction(state, large_prime_numbers::StrongLucasTestWithSelfridgeParameters, std::move(args)...);
+void StrongLucasTestWithSelfridgeParametersBenchmark(benchmark::State& state, Args&&... args) {
+  BenchmarkFunction(state, StrongLucasTestWithSelfridgeParameters, std::move(args)...);
 }
 
 template <class... Args>
-void EnhancedStrongLucasTest(benchmark::State& state, Args&&... args) {
+void EnhancedStrongLucasTestBenchmark(benchmark::State& state, Args&&... args) {
   BenchmarkFunctionWithTwoBases(state, EnhancedStrongLucasTestWithCheck, std::move(args)...);
 }
 
 template <class... Args>
-void EnhancedStrongLucasTestWithSelfridgeParameters(benchmark::State& state, Args&&... args) {
-  BenchmarkFunction(state, large_prime_numbers::EnhancedStrongLucasTestWithSelfridgeParameters, std::move(args)...);
+void EnhancedStrongLucasTestWithSelfridgeParametersBenchmark(benchmark::State& state, Args&&... args) {
+  BenchmarkFunction(state, EnhancedStrongLucasTestWithSelfridgeParameters, std::move(args)...);
 }
 
 }
 
-BenchmarkOnFourLargestPrimes(LucasTest)
-BenchmarkOnFourLargestPrimes(LucasTestWithSelfridgeParameters)
-BenchmarkOnFourLargestPrimes(AcceleratedLucasTest)
-BenchmarkOnFourLargestPrimes(AcceleratedLucasTestWithSelfridgeParameters)
-BenchmarkOnFourLargestPrimes(StrongLucasTest)
-BenchmarkOnFourLargestPrimes(StrongLucasTestWithSelfridgeParameters)
-BenchmarkOnFourLargestPrimes(EnhancedStrongLucasTest)
-BenchmarkOnFourLargestPrimes(EnhancedStrongLucasTestWithSelfridgeParameters)
+BenchmarkOnFourLargestPrimes(LucasTestBenchmark)
+BenchmarkOnFourLargestPrimes(LucasTestWithSelfridgeParametersBenchmark)
+BenchmarkOnFourLargestPrimes(AcceleratedLucasTestBenchmark)
+BenchmarkOnFourLargestPrimes(AcceleratedLucasTestWithSelfridgeParametersBenchmark)
+BenchmarkOnFourLargestPrimes(StrongLucasTestBenchmark)
+BenchmarkOnFourLargestPrimes(StrongLucasTestWithSelfridgeParametersBenchmark)
+BenchmarkOnFourLargestPrimes(EnhancedStrongLucasTestBenchmark)
+BenchmarkOnFourLargestPrimes(EnhancedStrongLucasTestWithSelfridgeParametersBenchmark)
 
 } // namespace large_prime_numbers
 

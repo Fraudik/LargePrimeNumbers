@@ -10,19 +10,19 @@ namespace
 {
 
 template <class ...Args>
-void LucasTest(benchmark::State& state, Args&&... args) {
+void LucasTestBenchmark(benchmark::State& state, Args&&... args) {
   BenchmarkFunctionWithTwoBases(state, LucasTestWithCheck, std::move(args)...);
 }
 
 template <class ...Args>
-void AcceleratedLucasTest(benchmark::State& state, Args&&... args) {
+void AcceleratedLucasTestBenchmark(benchmark::State& state, Args&&... args) {
   BenchmarkFunctionWithTwoBases(state, AcceleratedLucasTestWithCheck, std::move(args)...);
 }
 
 }
 
-BenchmarkOnLargestPrime(LucasTest)
-BenchmarkOnLargestPrime(AcceleratedLucasTest)
+BenchmarkOnLargestPrime(LucasTestBenchmark)
+BenchmarkOnLargestPrime(AcceleratedLucasTestBenchmark)
 
 } // namespace large_prime_numbers
 
